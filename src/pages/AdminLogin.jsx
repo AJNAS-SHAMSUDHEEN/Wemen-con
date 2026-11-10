@@ -3,13 +3,10 @@ import {
   ShieldCheck, 
   Lock, 
   Mail, 
-  ArrowRight, 
   AlertCircle, 
   Loader2, 
-  KeyRound, 
   UserPlus, 
   LogIn,
-  Sparkles,
   ArrowLeft
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
@@ -53,22 +50,14 @@ export const AdminLogin = ({ onBackToHome }) => {
     }
   };
 
-  const handleQuickDemoFill = () => {
-    setEmail("admin@womensconference.com");
-    setPassword("Admin@2026");
-  };
-
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md bg-white rounded-3xl border border-slate-200/90 shadow-2xl p-6 sm:p-8 relative overflow-hidden">
+    <div className="min-h-[75vh] flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md bg-white rounded-3xl border border-slate-200/90 shadow-xl p-6 sm:p-8 relative">
         
-        {/* Background gradient accent */}
-        <div className="absolute -top-16 -right-16 w-48 h-48 bg-gradient-to-br from-brand-300 to-rose-200 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
-
         {/* Back link */}
         <button
           onClick={onBackToHome}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-brand-600 transition-colors mb-6"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors mb-6 cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Public Website</span>
@@ -76,22 +65,22 @@ export const AdminLogin = ({ onBackToHome }) => {
 
         {/* Header */}
         <div className="text-center mb-6">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-600 to-rose-500 text-white mx-auto flex items-center justify-center shadow-lg shadow-brand-500/25 mb-4">
-            <ShieldCheck className="w-7 h-7" />
+          <div className="w-12 h-12 rounded-2xl bg-brand-100 text-brand-800 mx-auto flex items-center justify-center mb-3">
+            <ShieldCheck className="w-6 h-6" />
           </div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-            {isRegisterMode ? "Create Admin Account" : "Admin Portal Login"}
+          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+            {isRegisterMode ? "Create Admin Account" : "Admin Portal"}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             {isRegisterMode
-              ? "Set up the initial administrator credentials for this Firebase project"
-              : "Secure access restricted to authorized event administrators"}
+              ? "Set up initial administrator credentials for this project"
+              : "Secure access restricted to authorized administrators"}
           </p>
         </div>
 
         {/* Error Alert */}
         {(localError || authError) && (
-          <div className="mb-5 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 flex items-start gap-2.5 text-xs">
+          <div className="mb-4 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 flex items-start gap-2 text-xs">
             <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
             <span className="font-semibold">{localError || authError}</span>
           </div>
@@ -102,23 +91,21 @@ export const AdminLogin = ({ onBackToHome }) => {
           
           {isRegisterMode && (
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
                 Admin Name
               </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  placeholder="e.g. Chief Organizer"
-                  className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 text-sm font-medium focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none transition-all"
-                />
-              </div>
+              <input
+                type="text"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                placeholder="e.g. Lead Organizer"
+                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-medium focus:bg-white focus:border-brand-600 outline-none"
+              />
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
               Email Address
             </label>
             <div className="relative">
@@ -129,17 +116,17 @@ export const AdminLogin = ({ onBackToHome }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@womensconference.com"
-                className="w-full pl-10 pr-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 text-sm font-medium focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none transition-all"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-medium focus:bg-white focus:border-brand-600 outline-none"
               />
             </div>
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-1.5">
+            <div className="flex items-center justify-between mb-1">
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">
                 Password
               </label>
-              <span className="text-[11px] text-slate-400 font-medium">min 6 chars</span>
+              <span className="text-[11px] text-slate-400">min 6 chars</span>
             </div>
             <div className="relative">
               <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -149,7 +136,7 @@ export const AdminLogin = ({ onBackToHome }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-10 pr-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 text-sm font-medium focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 outline-none transition-all"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-medium focus:bg-white focus:border-brand-600 outline-none"
               />
             </div>
           </div>
@@ -157,7 +144,7 @@ export const AdminLogin = ({ onBackToHome }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-brand-600 to-rose-600 hover:from-brand-700 hover:to-rose-700 shadow-lg shadow-brand-500/25 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+            className="w-full py-3 rounded-2xl text-xs sm:text-sm font-bold text-white bg-brand-800 hover:bg-brand-900 shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
           >
             {loading ? (
               <>
@@ -172,14 +159,14 @@ export const AdminLogin = ({ onBackToHome }) => {
             ) : (
               <>
                 <LogIn className="w-4 h-4" />
-                <span>Sign In to Admin Dashboard</span>
+                <span>Sign In to Dashboard</span>
               </>
             )}
           </button>
         </form>
 
-        {/* Toggle between Login and Create Initial Admin */}
-        <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col gap-3 text-center">
+        {/* Toggle Mode */}
+        <div className="mt-5 pt-4 border-t border-slate-100 text-center">
           <button
             type="button"
             onClick={() => {
@@ -187,20 +174,11 @@ export const AdminLogin = ({ onBackToHome }) => {
               setLocalError("");
               setAuthError("");
             }}
-            className="text-xs font-bold text-brand-600 hover:text-brand-700 transition-colors"
+            className="text-xs font-semibold text-brand-700 hover:text-brand-900 transition-colors cursor-pointer"
           >
             {isRegisterMode 
-              ? "Already have an admin account? Sign in here" 
+              ? "Already have an admin account? Sign in" 
               : "First time setup? Create initial admin account"}
-          </button>
-
-          <button
-            type="button"
-            onClick={handleQuickDemoFill}
-            className="text-[11px] text-slate-400 hover:text-slate-600 transition-colors inline-flex items-center justify-center gap-1"
-          >
-            <Sparkles className="w-3 h-3 text-amber-500" />
-            <span>Fill sample admin email & password</span>
           </button>
         </div>
 
@@ -208,4 +186,3 @@ export const AdminLogin = ({ onBackToHome }) => {
     </div>
   );
 };
-

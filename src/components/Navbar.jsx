@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import { 
-  Sparkles, 
   ShieldCheck, 
   Menu, 
   X, 
-  Calendar, 
-  MapPin, 
   LogOut,
   ArrowRight
 } from "lucide-react";
@@ -27,7 +24,7 @@ export const Navbar = ({ currentView, setCurrentView }) => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-rose-100 shadow-xs transition-all">
+    <header className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
@@ -36,74 +33,73 @@ export const Navbar = ({ currentView, setCurrentView }) => {
             onClick={() => handleNav("home")}
             className="flex items-center gap-3 cursor-pointer group"
           >
-            <div className="w-11 h-11 rounded-2xl bg-[#981b37] text-white flex items-center justify-center font-serif italic text-lg shadow-md group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 rounded-2xl bg-brand-800 text-white flex items-center justify-center font-serif italic text-lg shadow-sm group-hover:scale-105 transition-transform">
               W
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-black text-lg sm:text-xl tracking-tight text-slate-900">
-                  വനിതാ സമ്മേളനം
+                <span className="font-extrabold text-base sm:text-lg tracking-tight text-slate-900">
+                  Women's Conference
                 </span>
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 rounded-full">
-                  ഇരിട്ടി
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-rose-50 text-brand-700 border border-rose-200 rounded-full">
+                  2026
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 hidden sm:block font-medium">
-                Wisdom Women Iritty Zone • 2026 നവംബർ 21
+                Iritty Mandalam • Wisdom Women
               </p>
             </div>
           </div>
 
-          {/* Desktop Navigation (No public participant details exposed!) */}
-          <nav className="hidden md:flex items-center gap-2">
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-1">
             <button
               onClick={() => handleNav("home")}
-              className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors ${
+              className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer ${
                 currentView === "home" 
-                  ? "text-rose-700 bg-rose-50" 
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/60"
+                  ? "text-brand-800 bg-rose-50" 
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/70"
               }`}
             >
-              സമ്മേളനം (Home)
+              Home
             </button>
             <button
               onClick={() => handleNav("home", "details")}
-              className="px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/60 transition-colors"
+              className="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-colors cursor-pointer"
             >
-              വേദിയും അതിഥികളും (Speakers)
+              Speakers & Venue
             </button>
             <button
               onClick={() => handleNav("home", "register")}
-              className="px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/60 transition-colors"
+              className="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 transition-colors cursor-pointer"
             >
-              രജിസ്ട്രേഷൻ (Register)
+              Register
             </button>
           </nav>
 
-          {/* Desktop Right CTA: Register & Admin */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Right Action */}
+          <div className="hidden md:flex items-center gap-2.5">
             {currentView !== "admin" ? (
               <button
                 onClick={() => handleNav("admin")}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-700 hover:text-rose-700 hover:bg-rose-50 border border-slate-200 transition-all flex items-center gap-1.5"
-                title="Admin Dashboard"
+                className="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-brand-800 hover:bg-slate-50 border border-slate-200 transition-all flex items-center gap-1.5 cursor-pointer"
               >
-                <ShieldCheck className="w-4 h-4 text-rose-600" />
-                <span>അഡ്മിൻ ലോഗിൻ (Admin)</span>
+                <ShieldCheck className="w-3.5 h-3.5 text-brand-700" />
+                <span>Admin Portal</span>
               </button>
             ) : (
               <button
                 onClick={() => handleNav("home")}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-700 hover:text-rose-700 hover:bg-rose-50 border border-slate-200 transition-all flex items-center gap-1.5"
+                className="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-brand-800 hover:bg-slate-50 border border-slate-200 transition-all flex items-center gap-1.5 cursor-pointer"
               >
-                <span>പബ്ലിക് സൈറ്റ് കാണുക</span>
+                <span>View Public Site</span>
               </button>
             )}
 
             {currentView === "admin" && currentUser ? (
               <button
                 onClick={logout}
-                className="px-3.5 py-2 rounded-xl text-xs font-bold text-rose-600 hover:bg-rose-50 border border-rose-200 transition-colors flex items-center gap-1.5"
+                className="px-3.5 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 border border-rose-200 transition-colors flex items-center gap-1.5 cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span>Logout</span>
@@ -111,28 +107,28 @@ export const Navbar = ({ currentView, setCurrentView }) => {
             ) : (
               <button
                 onClick={() => handleNav("home", "register")}
-                className="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-[#981b37] to-[#d62254] hover:from-[#7e142c] hover:to-[#b91c47] shadow-md shadow-rose-900/20 transition-all transform hover:-translate-y-0.5 flex items-center gap-1.5"
+                className="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-brand-800 hover:bg-brand-900 shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
               >
-                <span>രജിസ്റ്റർ ചെയ്യുക</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>Register Now</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
             )}
           </div>
 
-          {/* Mobile Buttons */}
+          {/* Mobile Menu Button */}
           <div className="flex md:hidden items-center gap-2">
             {currentView === "home" ? (
               <button
                 onClick={() => handleNav("admin")}
-                className="p-2 text-slate-700 hover:text-rose-700 hover:bg-rose-50 rounded-xl border border-slate-200 text-xs font-bold flex items-center gap-1"
+                className="p-2 text-slate-700 hover:text-brand-800 hover:bg-rose-50 rounded-xl border border-slate-200 text-xs font-semibold flex items-center gap-1"
               >
-                <ShieldCheck className="w-4 h-4 text-rose-600" />
+                <ShieldCheck className="w-3.5 h-3.5 text-brand-700" />
                 <span>Admin</span>
               </button>
             ) : (
               <button
                 onClick={() => handleNav("home")}
-                className="p-2 text-slate-700 hover:text-rose-700 hover:bg-rose-50 rounded-xl border border-slate-200 text-xs font-bold"
+                className="p-2 text-slate-700 hover:text-brand-800 hover:bg-rose-50 rounded-xl border border-slate-200 text-xs font-semibold"
               >
                 Public Site
               </button>
@@ -142,7 +138,7 @@ export const Navbar = ({ currentView, setCurrentView }) => {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
 
@@ -151,34 +147,34 @@ export const Navbar = ({ currentView, setCurrentView }) => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-rose-100 bg-white px-4 pt-3 pb-6 space-y-2.5 shadow-xl">
+        <div className="md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-2 shadow-xl">
           <button
             onClick={() => handleNav("home")}
-            className="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-bold text-slate-700 hover:bg-rose-50 hover:text-rose-700"
+            className="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50"
           >
-            സമ്മേളനം (Home)
+            Home
           </button>
           <button
             onClick={() => handleNav("home", "details")}
-            className="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-bold text-slate-700 hover:bg-rose-50 hover:text-rose-700"
+            className="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50"
           >
-            വേദിയും അതിഥികളും (Speakers & Venue)
+            Speakers & Venue
           </button>
           <button
             onClick={() => handleNav("home", "register")}
-            className="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-bold text-slate-700 hover:bg-rose-50 hover:text-rose-700 flex items-center justify-between"
+            className="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center justify-between"
           >
-            <span>രജിസ്ട്രേഷൻ ഫോം (Register)</span>
-            <span className="text-xs bg-rose-600 text-white font-bold px-2 py-0.5 rounded-full">Open</span>
+            <span>Registration Form</span>
+            <span className="text-[11px] bg-brand-800 text-white font-bold px-2 py-0.5 rounded-full">Open</span>
           </button>
 
           <div className="pt-2 border-t border-slate-100">
             <button
               onClick={() => handleNav("admin")}
-              className="w-full py-2.5 rounded-xl text-center text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 flex items-center justify-center gap-1.5"
+              className="w-full py-2.5 rounded-xl text-center text-xs font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 flex items-center justify-center gap-1.5"
             >
-              <ShieldCheck className="w-4 h-4 text-rose-600" />
-              <span>അഡ്മിൻ പോർട്ടൽ (Admin Dashboard)</span>
+              <ShieldCheck className="w-3.5 h-3.5 text-brand-700" />
+              <span>Admin Portal</span>
             </button>
           </div>
         </div>

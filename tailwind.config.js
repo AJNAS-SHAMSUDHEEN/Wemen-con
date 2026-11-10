@@ -8,35 +8,24 @@ export default {
     extend: {
       colors: {
         brand: {
-          50: '#fdf2f8',
-          100: '#fce7f3',
-          200: '#fbcfe8',
-          300: '#f9a8d4',
-          400: '#f472b6',
-          500: '#ec4899',
-          600: '#db2777',
-          700: '#be185d',
-          800: '#9d174d',
-          900: '#831843',
+          50: '#fdf2f4',
+          100: '#fce7ea',
+          200: '#f9d2d9',
+          300: '#f4aab8',
+          400: '#ec768e',
+          500: '#df4668',
+          600: '#c8264d',
+          700: '#a81b3d',
+          800: '#8c1936',
+          900: '#751931',
+          950: '#420917',
         },
-        emeraldPrimary: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          200: '#a7f3d0',
-          300: '#6ee7b7',
-          400: '#34d399',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
-        }
       },
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        ml: ['Noto Sans Malayalam', 'sans-serif'],
       },
     },
   },
   plugins: [],
 }
-

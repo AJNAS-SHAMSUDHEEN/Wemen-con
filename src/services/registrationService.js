@@ -40,16 +40,12 @@ export const checkDuplicatePhone = async (phone) => {
 
 /**
  * Submit a new registration to Cloud Firestore
- * Note: preferredTime is fixed to "9:30 AM - 4:00 PM" as per the conference poster
  */
 export const createRegistration = async ({
   fullName,
   phoneNumber,
   place,
   foodPreference,
-  latitude = null,
-  longitude = null,
-  locationAccuracy = null,
 }) => {
   const cleanPhone = formatToStandard10Digit(phoneNumber);
 
@@ -57,7 +53,7 @@ export const createRegistration = async ({
   const duplicateCheck = await checkDuplicatePhone(cleanPhone);
   if (duplicateCheck.isDuplicate) {
     const err = new Error(
-      `ഈ ഫോൺ നമ്പറിൽ (${cleanPhone.slice(-4)}) ഇതിനകം ഒരു രജിസ്ട്രേഷൻ ഉണ്ട് (ID: ${duplicateCheck.existingId}).`
+      `A registration with phone number ending in ${cleanPhone.slice(-4)} already exists (ID: ${duplicateCheck.existingId}).`
     );
     err.code = "DUPLICATE_PHONE";
     err.existingId = duplicateCheck.existingId;
@@ -73,14 +69,10 @@ export const createRegistration = async ({
     phoneNumber: cleanPhone,
     place: place.trim(),
     foodPreference: foodPreference || "Food Required",
-    preferredTime: "9:30 AM - 4:00 PM", // Fixed event timing from poster
-    conferenceName: "Wisdom Women വനിതാ സമ്മേളനം - ഇരിട്ടി മണ്ഡലം",
-    eventDate: "2026 നവംബർ 21 ശനി",
-    venue: "ചോയ്സ് ഓഡിറ്റോറിയം, നുച്ച്യാട് റോഡ്, ഉളിക്കൽ",
-    latitude: latitude !== null && !isNaN(latitude) ? Number(latitude) : null,
-    longitude: longitude !== null && !isNaN(longitude) ? Number(longitude) : null,
-    locationAccuracy: locationAccuracy !== null && !isNaN(locationAccuracy) ? Number(locationAccuracy) : null,
-    hasGpsLocation: latitude !== null && longitude !== null,
+    preferredTime: "9:30 AM - 4:00 PM",
+    conferenceName: "Wisdom Women Conference — Iritty Mandalam",
+    eventDate: "2026 November 21, Saturday",
+    venue: "Choice Auditorium, Nuchiyad Road, Ulikkal",
     status: "Confirmed",
     notes: "",
     registrationDate: serverTimestamp(),
@@ -124,7 +116,7 @@ export const subscribeToAllRegistrations = (onData, onError) => {
 };
 
 /**
- * Real-time count of total registrations for public stats banner (no private details exposed)
+ * Real-time count of total registrations for public banner
  */
 export const subscribeToRegistrationCount = (onCount, onError) => {
   const q = query(collection(db, REGISTRATIONS_COLLECTION));
