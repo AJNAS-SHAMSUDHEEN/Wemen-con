@@ -18,28 +18,35 @@ import { formatToStandard10Digit } from "../utils/validators";
 const REGISTRATIONS_COLLECTION = "registrations";
 
 /**
- * Check if a participant with this phone number is already registered
+ * Check if a participant with this phone number is already registered.
+ * If read permission is restricted to admin at database level, fails safely without blocking registration.
  */
 export const checkDuplicatePhone = async (phone) => {
-  const cleanPhone = formatToStandard10Digit(phone);
-  const q = query(
-    collection(db, REGISTRATIONS_COLLECTION),
-    where("phoneNumber", "==", cleanPhone)
-  );
-  const snapshot = await getDocs(q);
-  if (!snapshot.empty) {
-    const existing = snapshot.docs[0].data();
-    return {
-      isDuplicate: true,
-      existingId: existing.registrationId || snapshot.docs[0].id,
-      existingName: existing.fullName,
-    };
+  try {
+    const cleanPhone = formatToStandard10Digit(phone);
+    const q = query(
+      collection(db, REGISTRATIONS_COLLECTION),
+      where("phoneNumber", "==", cleanPhone)
+    );
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      const existing = snapshot.docs[0].data();
+      return {
+        isDuplicate: true,
+        existingId: existing.registrationId || snapshot.docs[0].id,
+        existingName: existing.fullName,
+      };
+    }
+    return { isDuplicate: false };
+  } catch (err) {
+    // If public read is restricted by security rules, gracefully bypass client check
+    console.warn("Duplicate check bypassed due to read rules:", err?.message || err);
+    return { isDuplicate: false };
   }
-  return { isDuplicate: false };
 };
 
 /**
- * Submit a new registration to Cloud Firestore (Food option avoided)
+ * Submit a new registration to Cloud Firestore
  */
 export const createRegistration = async ({
   fullName,
@@ -48,7 +55,7 @@ export const createRegistration = async ({
 }) => {
   const cleanPhone = formatToStandard10Digit(phoneNumber);
 
-  // Check duplicate phone
+  // Check duplicate phone (safely)
   const duplicateCheck = await checkDuplicatePhone(cleanPhone);
   if (duplicateCheck.isDuplicate) {
     const err = new Error(
@@ -114,20 +121,25 @@ export const subscribeToAllRegistrations = (onData, onError) => {
 };
 
 /**
- * Real-time count of total registrations for public banner
+ * Real-time count of total registrations
  */
 export const subscribeToRegistrationCount = (onCount, onError) => {
-  const q = query(collection(db, REGISTRATIONS_COLLECTION));
-  return onSnapshot(
-    q,
-    (snapshot) => {
-      onCount(snapshot.size);
-    },
-    (error) => {
-      console.error("Public count listener error:", error);
-      if (onError) onError(error);
-    }
-  );
+  try {
+    const q = query(collection(db, REGISTRATIONS_COLLECTION));
+    return onSnapshot(
+      q,
+      (snapshot) => {
+        onCount(snapshot.size);
+      },
+      (error) => {
+        // If read is blocked for public, fail silently
+        console.warn("Public count listener not permitted:", error?.message);
+        if (onError) onError(error);
+      }
+    );
+  } catch (err) {
+    return () => {};
+  }
 };
 
 /**

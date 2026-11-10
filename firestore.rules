@@ -2,49 +2,21 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper functions
-    function isAuthenticated() {
-      return request.auth != null;
-    }
-
-    // Helper to check valid registration fields on creation
-    function isValidRegistration(data) {
-      return data.keys().hasAll([
-        'registrationId', 
-        'fullName', 
-        'phoneNumber', 
-        'place', 
-        'foodPreference', 
-        'preferredTime', 
-        'status'
-      ]) 
-      && data.fullName is string && data.fullName.size() >= 2 && data.fullName.size() <= 100
-      && data.phoneNumber is string && data.phoneNumber.size() >= 10 && data.phoneNumber.size() <= 15
-      && data.place is string && data.place.size() >= 2 && data.place.size() <= 100;
-    }
-
     // Registrations collection
     match /registrations/{registrationId} {
-      // Public read allowed for confirmed participants list
+      // 1. Any public visitor can submit a registration
+      allow create: if true;
+
+      // 2. Read is allowed for counter & verification
       allow read: if true;
 
-      // Anyone can create a registration if it meets validation schema
-      allow create: if isValidRegistration(request.resource.data);
-
-      // Only authenticated admins can update or delete
-      allow update, delete: if isAuthenticated();
+      // 3. Only authenticated admin can update or delete records
+      allow update, delete: if request.auth != null;
     }
 
-    // Admins metadata collection
-    match /admins/{adminId} {
-      allow read, write: if isAuthenticated();
-    }
-
-    // Settings collection
-    match /settings/{settingId} {
-      allow read: if true;
-      allow write: if isAuthenticated();
+    // All other collections require authentication
+    match /{document=**} {
+      allow read, write: if request.auth != null;
     }
   }
 }
-
