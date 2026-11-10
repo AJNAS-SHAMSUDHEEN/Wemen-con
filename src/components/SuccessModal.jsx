@@ -8,12 +8,10 @@ import {
   Printer, 
   X, 
   MapPin, 
-  Utensils, 
   Calendar, 
   Clock, 
   Phone, 
-  User, 
-  Sparkles
+  User
 } from "lucide-react";
 import { formatDisplayPhone } from "../utils/validators";
 import { generateSelfConfirmationShare } from "../services/whatsappService";
@@ -60,10 +58,10 @@ export const SuccessModal = ({ registration, onClose }) => {
         <div className="bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-600 p-6 text-white text-center relative overflow-hidden">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors"
+            className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
             aria-label="Close"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
 
           <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md mx-auto flex items-center justify-center mb-3 shadow-inner">
@@ -96,7 +94,7 @@ export const SuccessModal = ({ registration, onClose }) => {
             </div>
             <button
               onClick={handleCopyId}
-              className="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 shadow-xs flex items-center gap-1.5 transition-all"
+              className="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
             >
               {copied ? (
                 <>
@@ -150,26 +148,12 @@ export const SuccessModal = ({ registration, onClose }) => {
               </span>
             </div>
 
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+            <div className="flex items-center justify-between pt-0.5">
               <span className="text-slate-500 flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-slate-400" />
                 <span>Place</span>
               </span>
               <span className="font-bold text-slate-900">{registration.place}</span>
-            </div>
-
-            <div className="flex items-center justify-between pt-0.5">
-              <span className="text-slate-500 flex items-center gap-1.5">
-                <Utensils className="w-3.5 h-3.5 text-slate-400" />
-                <span>Food Preference</span>
-              </span>
-              <span className={`font-bold px-2 py-0.5 rounded-full text-[11px] ${
-                registration.foodPreference === "Food Required"
-                  ? "bg-emerald-100 text-emerald-800"
-                  : "bg-amber-100 text-amber-800"
-              }`}>
-                {registration.foodPreference}
-              </span>
             </div>
           </div>
 

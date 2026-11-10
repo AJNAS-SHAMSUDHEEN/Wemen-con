@@ -3,8 +3,6 @@ import {
   User, 
   Phone, 
   MapPin, 
-  Utensils, 
-  CheckCircle2, 
   AlertCircle, 
   Loader2, 
   Sparkles,
@@ -24,7 +22,6 @@ export const RegistrationForm = ({ onSuccess }) => {
     fullName: "",
     phoneNumber: "",
     place: "",
-    foodPreference: "Food Required",
   });
 
   const [errors, setErrors] = useState({});
@@ -83,7 +80,6 @@ export const RegistrationForm = ({ onSuccess }) => {
         fullName: formData.fullName,
         phoneNumber: formData.phoneNumber,
         place: formData.place,
-        foodPreference: formData.foodPreference,
       });
 
       // Clear form on success
@@ -91,7 +87,6 @@ export const RegistrationForm = ({ onSuccess }) => {
         fullName: "",
         phoneNumber: "",
         place: "",
-        foodPreference: "Food Required",
       });
       setErrors({});
 
@@ -129,7 +124,7 @@ export const RegistrationForm = ({ onSuccess }) => {
             Register for the Conference
           </h3>
           <p className="text-rose-100 text-xs sm:text-sm mt-1 leading-relaxed">
-            Please fill out the form below to confirm your reserved seat.
+            Please enter your details below to confirm your seat.
           </p>
 
           <div className="mt-4 pt-3 border-t border-white/15 flex flex-wrap items-center gap-4 text-xs text-rose-100 font-medium">
@@ -229,7 +224,7 @@ export const RegistrationForm = ({ onSuccess }) => {
             )}
           </div>
 
-          {/* 3. Place (No Mahall) */}
+          {/* 3. Place */}
           <div>
             <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
               Place <span className="text-rose-600">*</span>
@@ -256,72 +251,6 @@ export const RegistrationForm = ({ onSuccess }) => {
                 <span>{errors.place}</span>
               </p>
             )}
-          </div>
-
-          {/* 4. Food Preference */}
-          <div>
-            <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-2">
-              Food Preference <span className="text-rose-600">*</span>
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={() => handleChange("foodPreference", "Food Required")}
-                className={`p-3.5 rounded-2xl border text-left flex items-start gap-3 transition-all ${
-                  formData.foodPreference === "Food Required"
-                    ? "border-emerald-600 bg-emerald-50/60 ring-2 ring-emerald-600/20 text-emerald-950"
-                    : "border-slate-200 bg-slate-50/50 hover:bg-slate-100 text-slate-700"
-                }`}
-              >
-                <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
-                  formData.foodPreference === "Food Required" 
-                    ? "bg-emerald-600 text-white shadow-xs" 
-                    : "bg-slate-200 text-slate-500"
-                }`}>
-                  <Utensils className="w-4 h-4" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-bold text-xs sm:text-sm">Food Required</span>
-                    {formData.foodPreference === "Food Required" && (
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                    )}
-                  </div>
-                  <p className="text-[11px] text-slate-500 mt-0.5">
-                    Complimentary lunch arranged
-                  </p>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleChange("foodPreference", "Food Not Required")}
-                className={`p-3.5 rounded-2xl border text-left flex items-start gap-3 transition-all ${
-                  formData.foodPreference === "Food Not Required"
-                    ? "border-amber-600 bg-amber-50/60 ring-2 ring-amber-600/20 text-amber-950"
-                    : "border-slate-200 bg-slate-50/50 hover:bg-slate-100 text-slate-700"
-                }`}
-              >
-                <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
-                  formData.foodPreference === "Food Not Required" 
-                    ? "bg-amber-600 text-white shadow-xs" 
-                    : "bg-slate-200 text-slate-500"
-                }`}>
-                  <Utensils className="w-4 h-4 opacity-50" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-bold text-xs sm:text-sm">Food Not Required</span>
-                    {formData.foodPreference === "Food Not Required" && (
-                      <CheckCircle2 className="w-3.5 h-3.5 text-amber-600" />
-                    )}
-                  </div>
-                  <p className="text-[11px] text-slate-500 mt-0.5">
-                    Helps prevent food waste
-                  </p>
-                </div>
-              </button>
-            </div>
           </div>
 
           {/* Submit CTA */}

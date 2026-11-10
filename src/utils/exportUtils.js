@@ -1,4 +1,4 @@
-import { formatDateTime, getGoogleMapsUrl } from "./formatters";
+import { formatDateTime } from "./formatters";
 
 /**
  * Export participant data to CSV file
@@ -13,13 +13,8 @@ export const exportToCSV = (registrations, filename = "womens_conference_registr
     "Registration ID",
     "Full Name",
     "Phone Number",
-    "Place / Location",
-    "Food Preference",
-    "Preferred Time",
+    "Place",
     "Status",
-    "GPS Latitude",
-    "GPS Longitude",
-    "Google Maps Link",
     "Registration Date",
     "Notes"
   ];
@@ -29,12 +24,7 @@ export const exportToCSV = (registrations, filename = "womens_conference_registr
     `"${(r.fullName || "").replace(/"/g, '""')}"`,
     `"${r.phoneNumber || ""}"`,
     `"${(r.place || "").replace(/"/g, '""')}"`,
-    `"${r.foodPreference || ""}"`,
-    `"${(r.preferredTime || "").replace(/"/g, '""')}"`,
     `"${r.status || "Confirmed"}"`,
-    r.latitude != null ? r.latitude : "",
-    r.longitude != null ? r.longitude : "",
-    r.latitude != null && r.longitude != null ? `"${getGoogleMapsUrl(r.latitude, r.longitude)}"` : '""',
     `"${formatDateTime(r.registrationDate)}"`,
     `"${(r.notes || "").replace(/"/g, '""')}"`
   ]);
@@ -71,4 +61,3 @@ export const exportToJSON = (registrations, filename = "womens_conference_regist
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 };
-

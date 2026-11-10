@@ -39,13 +39,12 @@ export const checkDuplicatePhone = async (phone) => {
 };
 
 /**
- * Submit a new registration to Cloud Firestore
+ * Submit a new registration to Cloud Firestore (Food option avoided)
  */
 export const createRegistration = async ({
   fullName,
   phoneNumber,
   place,
-  foodPreference,
 }) => {
   const cleanPhone = formatToStandard10Digit(phoneNumber);
 
@@ -68,7 +67,6 @@ export const createRegistration = async ({
     fullName: fullName.trim(),
     phoneNumber: cleanPhone,
     place: place.trim(),
-    foodPreference: foodPreference || "Food Required",
     preferredTime: "9:30 AM - 4:00 PM",
     conferenceName: "Wisdom Women Conference — Iritty Mandalam",
     eventDate: "2026 November 21, Saturday",

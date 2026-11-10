@@ -1,7 +1,7 @@
 import { formatForWhatsApp } from "../utils/validators";
 
 /**
- * WhatsApp Click-to-Chat Service for Wisdom Women Conference - Iritty Mandalam
+ * WhatsApp Click-to-Chat Service for Women's Conference - Iritty Mandalam
  */
 
 export const DEFAULT_REMINDER_TEMPLATE = 
@@ -15,7 +15,6 @@ export const DEFAULT_REMINDER_TEMPLATE =
 • തീയതി: 2026 നവംബർ 21 ശനി
 • സമയം: രാവിലെ 9:30 മുതൽ വൈകുന്നേരം 4:00 വരെ
 • വേദി: ചോയ്സ് ഓഡിറ്റോറിയം, നുച്ച്യാട് റോഡ്, ഉളിക്കൽ
-• ഭക്ഷണം: {FoodPreference}
 
 സമ്മേളനത്തിൽ കൃത്യസമയത്ത് എത്തിച്ചേരുവാൻ അഭ്യർത്ഥിക്കുന്നു.
 
@@ -48,10 +47,9 @@ Reg ID: {RegistrationId}
 export const generateMessage = (template, participant) => {
   if (!participant) return "";
   return template
-    .replace(/{Name}/g, participant.fullName || "സഹോദരി")
+    .replace(/{Name}/g, participant.fullName || "Participant")
     .replace(/{RegistrationId}/g, participant.registrationId || "N/A")
-    .replace(/{Place}/g, participant.place || "N/A")
-    .replace(/{FoodPreference}/g, participant.foodPreference === "Food Required" ? "ഭക്ഷണം ആവശ്യമുള്ളവർ" : "ഭക്ഷണം ആവശ്യമില്ലാത്തവർ");
+    .replace(/{Place}/g, participant.place || "N/A");
 };
 
 /**
@@ -90,7 +88,6 @@ export const generateSelfConfirmationShare = (registration) => {
 • *സ്ഥലം:* ${registration.place}
 • *തീയതി:* 2026 നവംബർ 21 ശനി (രാവിലെ 9:30 - വൈകിട്ട് 4:00)
 • *വേദി:* ചോയ്സ് ഓഡിറ്റോറിയം, നുച്ച്യാട് റോഡ്, ഉളിക്കൽ
-• *ഭക്ഷണം:* ${registration.foodPreference === "Food Required" ? "ഭക്ഷണം ആവശ്യമുണ്ട്" : "ഭക്ഷണം ആവശ്യമില്ല"}
 
 എല്ലാവരെയും സ്നേഹപൂർവ്വം ക്ഷണിക്കുന്നു!`;
 };

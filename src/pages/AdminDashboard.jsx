@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { 
   Users, 
-  Utensils, 
   MapPin, 
   Calendar, 
   Search, 
-  Filter, 
   Download, 
   Trash2, 
   Edit, 
@@ -15,7 +13,7 @@ import {
   X, 
   ShieldCheck, 
   Layers,
-  ArrowUpDown
+  CheckCircle2
 } from "lucide-react";
 import { 
   subscribeToAllRegistrations, 
@@ -38,7 +36,6 @@ export const AdminDashboard = () => {
   // Filters & Search
   const [searchTerm, setSearchTerm] = useState("");
   const [filterPlace, setFilterPlace] = useState("all");
-  const [filterFood, setFilterFood] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
   const [sortOrder, setSortOrder] = useState("desc");
 
@@ -76,12 +73,14 @@ export const AdminDashboard = () => {
   // Compute Statistics
   const stats = useMemo(() => {
     const total = registrations.length;
-    const foodReq = registrations.filter(r => r.foodPreference === "Food Required").length;
-    const foodNotReq = total - foodReq;
     
     // Unique places
     const placesSet = new Set(registrations.map(r => r.place ? r.place.trim() : "").filter(Boolean));
     const totalPlaces = placesSet.size;
+
+    // Confirmed count
+    const confirmedCount = registrations.filter(r => (r.status || "Confirmed") === "Confirmed").length;
+    const attendedCount = registrations.filter(r => r.status === "Attended").length;
 
     // Today's registrations
     const now = new Date();
@@ -96,10 +95,9 @@ export const AdminDashboard = () => {
 
     return {
       total,
-      foodReq,
-      foodNotReq,
-      foodPercentage: total > 0 ? Math.round((foodReq / total) * 100) : 0,
       totalPlaces,
+      confirmedCount,
+      attendedCount,
       todayCount,
     };
   }, [registrations]);
@@ -124,17 +122,16 @@ export const AdminDashboard = () => {
         const matchesPlace = filterPlace === "all" ||
           (r.place && r.place.trim().toLowerCase() === filterPlace.trim().toLowerCase());
 
-        const matchesFood = filterFood === "all" || r.foodPreference === filterFood;
         const matchesStatus = filterStatus === "all" || (r.status || "Confirmed") === filterStatus;
 
-        return matchesSearch && matchesPlace && matchesFood && matchesStatus;
+        return matchesSearch && matchesPlace && matchesStatus;
       })
       .sort((a, b) => {
         const dateA = a.registrationDate?.toDate ? a.registrationDate.toDate() : new Date(a.registrationDate || 0);
         const dateB = b.registrationDate?.toDate ? b.registrationDate.toDate() : new Date(b.registrationDate || 0);
         return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
       });
-  }, [registrations, searchTerm, filterPlace, filterFood, filterStatus, sortOrder]);
+  }, [registrations, searchTerm, filterPlace, filterStatus, sortOrder]);
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
@@ -272,7 +269,7 @@ export const AdminDashboard = () => {
         {/* Error Alert */}
         {error && (
           <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+            <ShieldCheck className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
             <div>
               <p className="font-bold text-sm">Firestore Alert</p>
               <p className="text-xs mt-0.5">{error}</p>
@@ -280,8 +277,8 @@ export const AdminDashboard = () => {
           </div>
         )}
 
-        {/* 1. Statistic Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        {/* 1. Statistic Cards (Clean 4 cards without food) */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           
           {/* Total Registrations */}
           <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
@@ -293,56 +290,40 @@ export const AdminDashboard = () => {
             </div>
             <div>
               <p className="text-3xl font-black text-slate-900 tracking-tight">{stats.total}</p>
-              <p className="text-[11px] font-medium text-slate-500 mt-1">Confirmed participants</p>
+              <p className="text-[11px] font-medium text-slate-500 mt-1">Total participants</p>
             </div>
           </div>
 
-          {/* Food Required */}
+          {/* Unique Places */}
           <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Food Required</span>
-              <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
-                <Utensils className="w-4 h-4" />
-              </div>
-            </div>
-            <div>
-              <p className="text-3xl font-black text-emerald-600 tracking-tight">{stats.foodReq}</p>
-              <p className="text-[11px] font-medium text-slate-500 mt-1">
-                {stats.foodPercentage}% meals requested
-              </p>
-            </div>
-          </div>
-
-          {/* Food Not Required */}
-          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Food Not Required</span>
-              <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
-                <Utensils className="w-4 h-4 opacity-60" />
-              </div>
-            </div>
-            <div>
-              <p className="text-3xl font-black text-amber-600 tracking-tight">{stats.foodNotReq}</p>
-              <p className="text-[11px] font-medium text-slate-500 mt-1">No meal arrangement</p>
-            </div>
-          </div>
-
-          {/* Total Unique Places */}
-          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Places</span>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Unique Places</span>
               <div className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center">
                 <MapPin className="w-4 h-4" />
               </div>
             </div>
             <div>
               <p className="text-3xl font-black text-indigo-600 tracking-tight">{stats.totalPlaces}</p>
-              <p className="text-[11px] font-medium text-slate-500 mt-1">Unique localities</p>
+              <p className="text-[11px] font-medium text-slate-500 mt-1">Different localities</p>
+            </div>
+          </div>
+
+          {/* Confirmed Seats */}
+          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Confirmed</span>
+              <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                <CheckCircle2 className="w-4 h-4" />
+              </div>
+            </div>
+            <div>
+              <p className="text-3xl font-black text-emerald-600 tracking-tight">{stats.confirmedCount}</p>
+              <p className="text-[11px] font-medium text-slate-500 mt-1">Confirmed participants</p>
             </div>
           </div>
 
           {/* Today's Registrations */}
-          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs col-span-2 lg:col-span-1 flex flex-col justify-between">
+          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Today</span>
               <div className="w-8 h-8 rounded-xl bg-pink-100 text-pink-700 flex items-center justify-center">
@@ -351,7 +332,7 @@ export const AdminDashboard = () => {
             </div>
             <div>
               <p className="text-3xl font-black text-pink-600 tracking-tight">{stats.todayCount}</p>
-              <p className="text-[11px] font-medium text-slate-500 mt-1">Last 24 hours</p>
+              <p className="text-[11px] font-medium text-slate-500 mt-1">Joined in last 24h</p>
             </div>
           </div>
 
@@ -360,7 +341,7 @@ export const AdminDashboard = () => {
         {/* 2. Search, Filter, and Controls */}
         <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs space-y-4">
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {/* Search */}
             <div className="relative lg:col-span-2">
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -384,19 +365,6 @@ export const AdminDashboard = () => {
                 {uniquePlaces.map(p => (
                   <option key={p} value={p}>{p}</option>
                 ))}
-              </select>
-            </div>
-
-            {/* Food Filter */}
-            <div>
-              <select
-                value={filterFood}
-                onChange={(e) => setFilterFood(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-medium text-slate-700 outline-none cursor-pointer"
-              >
-                <option value="all">All Food Choices</option>
-                <option value="Food Required">Food Required</option>
-                <option value="Food Not Required">Food Not Required</option>
               </select>
             </div>
 
@@ -469,7 +437,7 @@ export const AdminDashboard = () => {
 
         </div>
 
-        {/* 3. Registrations Table */}
+        {/* 3. Registrations Table (No Food column) */}
         <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
           
           <div className="p-5 border-b border-slate-100 flex items-center justify-between">
@@ -502,7 +470,6 @@ export const AdminDashboard = () => {
                   <th className="p-4">Reg ID</th>
                   <th className="p-4">Participant & Mobile</th>
                   <th className="p-4">Place</th>
-                  <th className="p-4">Food</th>
                   <th className="p-4">Registered Date</th>
                   <th className="p-4">Status</th>
                   <th className="p-4 text-right">Actions</th>
@@ -542,16 +509,6 @@ export const AdminDashboard = () => {
 
                         <td className="p-4 font-medium text-slate-700">
                           {r.place}
-                        </td>
-
-                        <td className="p-4">
-                          <span className={`px-2.5 py-1 rounded-full font-bold text-[10px] uppercase tracking-wider ${
-                            r.foodPreference === "Food Required"
-                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                              : "bg-amber-50 text-amber-700 border border-amber-200"
-                          }`}>
-                            {r.foodPreference === "Food Required" ? "Required" : "Not Required"}
-                          </span>
                         </td>
 
                         <td className="p-4 text-slate-500 text-[11px]">
@@ -619,7 +576,7 @@ export const AdminDashboard = () => {
                   })
                 ) : (
                   <tr>
-                    <td colSpan={8} className="p-12 text-center text-slate-400">
+                    <td colSpan={7} className="p-12 text-center text-slate-400">
                       <Users className="w-10 h-10 mx-auto text-slate-300 mb-2" />
                       <p className="font-semibold text-slate-600">No registrations found</p>
                     </td>
@@ -676,12 +633,6 @@ export const AdminDashboard = () => {
                 <span className="font-bold text-slate-900">{viewParticipant.place}</span>
               </div>
               <div className="p-3 rounded-2xl bg-slate-50 flex items-center justify-between">
-                <span className="text-slate-500 font-medium">Food Preference</span>
-                <span className="font-bold text-slate-900">
-                  {viewParticipant.foodPreference}
-                </span>
-              </div>
-              <div className="p-3 rounded-2xl bg-slate-50 flex items-center justify-between">
                 <span className="text-slate-500 font-medium">Status</span>
                 <span className="font-bold text-emerald-700">{viewParticipant.status || "Confirmed"}</span>
               </div>
@@ -730,7 +681,6 @@ export const AdminDashboard = () => {
                     fullName: editParticipant.fullName,
                     phoneNumber: editParticipant.phoneNumber,
                     place: editParticipant.place,
-                    foodPreference: editParticipant.foodPreference,
                     status: editParticipant.status,
                   });
                   setEditParticipant(null);
@@ -771,18 +721,6 @@ export const AdminDashboard = () => {
                   onChange={(e) => setEditParticipant({ ...editParticipant, place: e.target.value })}
                   className="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-brand-600 font-medium"
                 />
-              </div>
-
-              <div>
-                <label className="block font-semibold text-slate-700 mb-1">Food Preference</label>
-                <select
-                  value={editParticipant.foodPreference}
-                  onChange={(e) => setEditParticipant({ ...editParticipant, foodPreference: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-brand-600 font-medium cursor-pointer"
-                >
-                  <option value="Food Required">Food Required</option>
-                  <option value="Food Not Required">Food Not Required</option>
-                </select>
               </div>
 
               <div>
