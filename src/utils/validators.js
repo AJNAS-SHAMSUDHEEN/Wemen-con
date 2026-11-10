@@ -75,3 +75,4 @@ export const validatePlace = (place) => {
   }
   return { isValid: true };
 };
+

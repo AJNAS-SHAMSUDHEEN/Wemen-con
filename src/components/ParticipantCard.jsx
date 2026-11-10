@@ -98,3 +98,4 @@ export const ParticipantCard = ({ participant }) => {
     </div>
   );
 };
+

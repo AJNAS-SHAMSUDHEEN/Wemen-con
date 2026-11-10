@@ -71,3 +71,4 @@ export const exportToJSON = (registrations, filename = "womens_conference_regist
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 };
+

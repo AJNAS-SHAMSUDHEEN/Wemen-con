@@ -219,3 +219,4 @@ export const Navbar = ({ currentView, setCurrentView, participantCount = 0 }) =>
     </header>
   );
 };
+

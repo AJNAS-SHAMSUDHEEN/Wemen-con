@@ -88,3 +88,4 @@ Assalamu Alaikum! I have successfully registered for the Women's Conference.
 
 Join us for an inspiring experience!`;
 };
+

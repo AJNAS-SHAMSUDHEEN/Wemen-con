@@ -191,3 +191,4 @@ export const ParticipantsList = ({ participants = [], loading = false }) => {
     </section>
   );
 };
+

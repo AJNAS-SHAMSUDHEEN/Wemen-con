@@ -231,3 +231,4 @@ export const SuccessModal = ({ registration, onClose }) => {
     </div>
   );
 };
+

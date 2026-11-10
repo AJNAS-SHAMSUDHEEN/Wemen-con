@@ -176,3 +176,4 @@ export const deleteRegistration = async (id) => {
   const docRef = doc(db, REGISTRATIONS_COLLECTION, id);
   await deleteDoc(docRef);
 };
+

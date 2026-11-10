@@ -159,3 +159,4 @@ export const HomePage = ({ participants = [], loading = false }) => {
     </main>
   );
 };
+

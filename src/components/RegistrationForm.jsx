@@ -541,3 +541,4 @@ export const RegistrationForm = ({ onSuccess }) => {
     </div>
   );
 };
+
