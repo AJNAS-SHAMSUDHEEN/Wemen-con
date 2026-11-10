@@ -3,7 +3,6 @@ import {
   Users, 
   Utensils, 
   MapPin, 
-  Clock, 
   Calendar, 
   Search, 
   Filter, 
@@ -15,9 +14,6 @@ import {
   ExternalLink, 
   CheckCircle, 
   AlertCircle, 
-  ChevronUp, 
-  ChevronDown, 
-  Sparkles, 
   RefreshCw, 
   X, 
   ShieldCheck, 
@@ -32,7 +28,7 @@ import {
   deleteRegistration 
 } from "../services/registrationService";
 import { exportToCSV, exportToJSON } from "../utils/exportUtils";
-import { formatDateTime, formatDateOnly, getGoogleMapsUrl } from "../utils/formatters";
+import { formatDateTime, getGoogleMapsUrl } from "../utils/formatters";
 import { formatDisplayPhone } from "../utils/validators";
 import { WhatsAppModal } from "../components/WhatsAppModal";
 import { useAuth } from "../context/AuthContext";
@@ -48,9 +44,8 @@ export const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterPlace, setFilterPlace] = useState("all");
   const [filterFood, setFilterFood] = useState("all");
-  const [filterTime, setFilterTime] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [sortOrder, setSortOrder] = useState("desc"); // "desc" (newest) or "asc" (oldest)
+  const [sortOrder, setSortOrder] = useState("desc");
 
   // Selection for bulk actions
   const [selectedIds, setSelectedIds] = useState(new Set());
@@ -114,7 +109,7 @@ export const AdminDashboard = () => {
     };
   }, [registrations]);
 
-  // Unique lists for dropdowns
+  // Unique places for dropdown
   const uniquePlaces = useMemo(() => {
     const set = new Set(registrations.map(r => r.place ? r.place.trim() : "").filter(Boolean));
     return Array.from(set).sort();
@@ -124,7 +119,6 @@ export const AdminDashboard = () => {
   const filteredRegistrations = useMemo(() => {
     return registrations
       .filter((r) => {
-        // Search by Name or Phone
         const search = searchTerm.toLowerCase().trim();
         const matchesSearch = !search ||
           (r.fullName && r.fullName.toLowerCase().includes(search)) ||
@@ -132,29 +126,21 @@ export const AdminDashboard = () => {
           (r.registrationId && r.registrationId.toLowerCase().includes(search)) ||
           (r.place && r.place.toLowerCase().includes(search));
 
-        // Place filter
         const matchesPlace = filterPlace === "all" ||
           (r.place && r.place.trim().toLowerCase() === filterPlace.trim().toLowerCase());
 
-        // Food filter
         const matchesFood = filterFood === "all" || r.foodPreference === filterFood;
-
-        // Time slot filter
-        const matchesTime = filterTime === "all" || r.preferredTime === filterTime;
-
-        // Status filter
         const matchesStatus = filterStatus === "all" || (r.status || "Confirmed") === filterStatus;
 
-        return matchesSearch && matchesPlace && matchesFood && matchesTime && matchesStatus;
+        return matchesSearch && matchesPlace && matchesFood && matchesStatus;
       })
       .sort((a, b) => {
         const dateA = a.registrationDate?.toDate ? a.registrationDate.toDate() : new Date(a.registrationDate || 0);
         const dateB = b.registrationDate?.toDate ? b.registrationDate.toDate() : new Date(b.registrationDate || 0);
         return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
       });
-  }, [registrations, searchTerm, filterPlace, filterFood, filterTime, filterStatus, sortOrder]);
+  }, [registrations, searchTerm, filterPlace, filterFood, filterStatus, sortOrder]);
 
-  // Checkbox handlers
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setSelectedIds(new Set(filteredRegistrations.map(r => r.id)));
@@ -170,7 +156,6 @@ export const AdminDashboard = () => {
     setSelectedIds(next);
   };
 
-  // Status update
   const handleStatusChange = async (id, newStatus) => {
     try {
       await updateRegistration(id, { status: newStatus });
@@ -179,7 +164,6 @@ export const AdminDashboard = () => {
     }
   };
 
-  // Bulk Status change
   const handleBulkStatusChange = async (newStatus) => {
     if (!selectedIds.size) return;
     try {
@@ -191,7 +175,6 @@ export const AdminDashboard = () => {
     }
   };
 
-  // Delete handler
   const handleDelete = async (id) => {
     try {
       await deleteRegistration(id);
@@ -206,9 +189,8 @@ export const AdminDashboard = () => {
     }
   };
 
-  // Bulk Delete
   const handleBulkDelete = async () => {
-    if (!window.confirm(`Are you sure you want to delete ${selectedIds.size} selected registrations? This cannot be undone.`)) {
+    if (!window.confirm(`തിരഞ്ഞെടുത്ത ${selectedIds.size} രജിസ്ട്രേഷനുകൾ നീക്കം ചെയ്യണമെന്ന് ഉറപ്പാണോ?`)) {
       return;
     }
     try {
@@ -220,18 +202,16 @@ export const AdminDashboard = () => {
     }
   };
 
-  // Open WhatsApp for single
   const triggerWhatsAppSingle = (participant) => {
     setWhatsAppTargetParticipant(participant);
     setWhatsAppSelectedList([]);
     setWhatsAppModalOpen(true);
   };
 
-  // Open WhatsApp for selected
   const triggerWhatsAppBulk = () => {
     const list = registrations.filter(r => selectedIds.has(r.id));
     if (!list.length) {
-      alert("Please select at least one participant using checkboxes.");
+      alert("ദയവായി കുറഞ്ഞത് ഒരു പങ്കാളിയെ എങ്കിലും തിരഞ്ഞെടുക്കുക.");
       return;
     }
     setWhatsAppTargetParticipant(null);
@@ -243,29 +223,29 @@ export const AdminDashboard = () => {
     <div className="min-h-screen bg-slate-50/80 pb-20">
       
       {/* Top Admin Header */}
-      <div className="bg-white border-b border-slate-200/80 sticky top-20 z-30 shadow-xs">
+      <div className="bg-white border-b border-slate-200 sticky top-20 z-30 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="w-8 h-8 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-xs">
+              <span className="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-xs">
                 <ShieldCheck className="w-4 h-4" />
               </span>
               <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                Admin Control Center
+                വനിതാ സമ്മേളനം — അഡ്മിൻ കൺട്രോൾ പാനൽ
               </h1>
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
                 Live Cloud Firestore
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">
-              Logged in as <span className="font-semibold text-slate-800">{currentUser?.email || "Admin"}</span>
+              ഇരിട്ടി മണ്ഡലം (2026 നവംബർ 21 ശനി) • ലോഗിൻ ചെയ്തിരിക്കുന്നത്: <span className="font-semibold text-slate-800">{currentUser?.email || "Admin"}</span>
             </p>
           </div>
 
-          {/* Top Actions: Export CSV, Excel, Bulk WhatsApp */}
+          {/* Top Actions: Export CSV, JSON, Bulk WhatsApp */}
           <div className="flex flex-wrap items-center gap-2.5">
             <button
-              onClick={() => exportToCSV(filteredRegistrations)}
+              onClick={() => exportToCSV(filteredRegistrations, "wisdom_women_registrations.csv")}
               className="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-xs flex items-center gap-1.5 transition-all"
               title="Download CSV"
             >
@@ -274,7 +254,7 @@ export const AdminDashboard = () => {
             </button>
 
             <button
-              onClick={() => exportToJSON(filteredRegistrations)}
+              onClick={() => exportToJSON(filteredRegistrations, "wisdom_women_registrations.json")}
               className="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 shadow-xs flex items-center gap-1.5 transition-all"
               title="Download JSON format"
             >
@@ -288,7 +268,7 @@ export const AdminDashboard = () => {
               className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm shadow-emerald-600/30 flex items-center gap-1.5 transition-all disabled:opacity-40 disabled:pointer-events-none"
             >
               <MessageCircle className="w-3.5 h-3.5 fill-current" />
-              <span>WhatsApp Selected ({selectedIds.size})</span>
+              <span>WhatsApp സന്ദേശം ({selectedIds.size})</span>
             </button>
           </div>
         </div>
@@ -301,7 +281,7 @@ export const AdminDashboard = () => {
           <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
             <div>
-              <p className="font-bold text-sm">Firestore Connection Alert</p>
+              <p className="font-bold text-sm">Firestore Alert</p>
               <p className="text-xs mt-0.5">{error}</p>
             </div>
           </div>
@@ -311,23 +291,23 @@ export const AdminDashboard = () => {
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           
           {/* Total Registrations */}
-          <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total</span>
-              <div className="w-8 h-8 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">ആകെ രജിസ്ട്രേഷൻ</span>
+              <div className="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center">
                 <Users className="w-4 h-4" />
               </div>
             </div>
             <div>
               <p className="text-3xl font-black text-slate-900 tracking-tight">{stats.total}</p>
-              <p className="text-[11px] font-semibold text-slate-500 mt-1">Confirmed participants</p>
+              <p className="text-[11px] font-semibold text-slate-500 mt-1">സ്ഥിരീകരിച്ച പങ്കാളികൾ</p>
             </div>
           </div>
 
           {/* Food Required */}
-          <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Food Yes</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">ഭക്ഷണം ആവശ്യമുള്ളവർ</span>
               <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
                 <Utensils className="w-4 h-4" />
               </div>
@@ -335,68 +315,68 @@ export const AdminDashboard = () => {
             <div>
               <p className="text-3xl font-black text-emerald-600 tracking-tight">{stats.foodReq}</p>
               <p className="text-[11px] font-semibold text-slate-500 mt-1">
-                {stats.foodPercentage}% of attendees
+                {stats.foodPercentage}% പേർക്ക് ഭക്ഷണം
               </p>
             </div>
           </div>
 
           {/* Food Not Required */}
-          <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Food No</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">ഭക്ഷണം ആവശ്യമില്ലാത്തവർ</span>
               <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
                 <Utensils className="w-4 h-4 opacity-60" />
               </div>
             </div>
             <div>
               <p className="text-3xl font-black text-amber-600 tracking-tight">{stats.foodNotReq}</p>
-              <p className="text-[11px] font-semibold text-slate-500 mt-1">No meal arrangement</p>
+              <p className="text-[11px] font-semibold text-slate-500 mt-1">ഭക്ഷണം ഒഴിവാക്കിയവർ</p>
             </div>
           </div>
 
           {/* Total Unique Places */}
-          <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Places</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">പ്രദേശങ്ങൾ / മഹല്ലുകൾ</span>
               <div className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center">
                 <MapPin className="w-4 h-4" />
               </div>
             </div>
             <div>
               <p className="text-3xl font-black text-indigo-600 tracking-tight">{stats.totalPlaces}</p>
-              <p className="text-[11px] font-semibold text-slate-500 mt-1">Cities & districts</p>
+              <p className="text-[11px] font-semibold text-slate-500 mt-1">വ്യത്യസ്ത സ്ഥലങ്ങൾ</p>
             </div>
           </div>
 
           {/* Today's Registrations */}
-          <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs col-span-2 lg:col-span-1 flex flex-col justify-between">
+          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs col-span-2 lg:col-span-1 flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Today</span>
-              <div className="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">ഇന്നത്തെ രജിസ്ട്രേഷൻ</span>
+              <div className="w-8 h-8 rounded-xl bg-pink-100 text-pink-700 flex items-center justify-center">
                 <Calendar className="w-4 h-4" />
               </div>
             </div>
             <div>
-              <p className="text-3xl font-black text-rose-600 tracking-tight">{stats.todayCount}</p>
-              <p className="text-[11px] font-semibold text-slate-500 mt-1">Joined in last 24h</p>
+              <p className="text-3xl font-black text-pink-600 tracking-tight">{stats.todayCount}</p>
+              <p className="text-[11px] font-semibold text-slate-500 mt-1">കഴിഞ്ഞ 24 മണിക്കൂറിൽ</p>
             </div>
           </div>
 
         </div>
 
-        {/* 2. Search, Filter, and Bulk Action Controls */}
-        <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
+        {/* 2. Search, Filter, and Controls */}
+        <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs space-y-4">
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
-            {/* Search by Name or Phone */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            {/* Search */}
             <div className="relative lg:col-span-2">
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search name, phone, place, or ID..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-medium focus:border-brand-500 focus:ring-2 focus:ring-brand-500/10 outline-none"
+                placeholder="പേര്, ഫോൺ, സ്ഥലം, Reg ID..."
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-medium focus:border-rose-600 outline-none"
               />
             </div>
 
@@ -407,7 +387,7 @@ export const AdminDashboard = () => {
                 onChange={(e) => setFilterPlace(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-medium text-slate-700 outline-none cursor-pointer"
               >
-                <option value="all">All Places</option>
+                <option value="all">എല്ലാ സ്ഥലങ്ങളും ({uniquePlaces.length})</option>
                 {uniquePlaces.map(p => (
                   <option key={p} value={p}>{p}</option>
                 ))}
@@ -421,9 +401,9 @@ export const AdminDashboard = () => {
                 onChange={(e) => setFilterFood(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-medium text-slate-700 outline-none cursor-pointer"
               >
-                <option value="all">All Food</option>
-                <option value="Food Required">Food Required</option>
-                <option value="Food Not Required">Food Not Required</option>
+                <option value="all">ഭക്ഷണം (എല്ലാം)</option>
+                <option value="Food Required">ഭക്ഷണം ആവശ്യമുള്ളവർ</option>
+                <option value="Food Not Required">ഭക്ഷണം ആവശ്യമില്ലാത്തവർ</option>
               </select>
             </div>
 
@@ -434,34 +414,23 @@ export const AdminDashboard = () => {
                 onChange={(e) => setFilterStatus(e.target.value)}
                 className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-medium text-slate-700 outline-none cursor-pointer"
               >
-                <option value="all">All Statuses</option>
+                <option value="all">സ്റ്റാറ്റസ് (എല്ലാം)</option>
                 <option value="Confirmed">Confirmed</option>
                 <option value="Attended">Attended</option>
                 <option value="Pending">Pending</option>
                 <option value="Cancelled">Cancelled</option>
               </select>
             </div>
-
-            {/* Sort Order */}
-            <div>
-              <button
-                onClick={() => setSortOrder(prev => prev === "desc" ? "asc" : "desc")}
-                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 bg-slate-50 hover:bg-white flex items-center justify-between"
-              >
-                <span>Date: {sortOrder === "desc" ? "Newest" : "Oldest"}</span>
-                <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
-              </button>
-            </div>
           </div>
 
-          {/* Bulk Selection Ribbon */}
+          {/* Bulk Ribbon */}
           {selectedIds.size > 0 && (
-            <div className="p-3 rounded-2xl bg-brand-50 border border-brand-200/80 flex flex-wrap items-center justify-between gap-3 text-xs animate-fadeIn">
+            <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 flex flex-wrap items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-brand-900 bg-brand-200/70 px-2.5 py-1 rounded-full">
-                  {selectedIds.size} Selected
+                <span className="font-extrabold text-rose-900 bg-rose-200/80 px-2.5 py-1 rounded-full">
+                  {selectedIds.size} പേരെ തിരഞ്ഞെടുത്തു
                 </span>
-                <span className="text-brand-700 font-medium">Bulk Actions:</span>
+                <span className="text-rose-700 font-medium">Bulk Actions:</span>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
@@ -470,7 +439,7 @@ export const AdminDashboard = () => {
                   className="px-3 py-1.5 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 flex items-center gap-1.5 transition-colors"
                 >
                   <MessageCircle className="w-3.5 h-3.5" />
-                  <span>Send WhatsApp</span>
+                  <span>വാട്ട്‌സ്ആപ്പ് അയക്കുക</span>
                 </button>
 
                 <button
@@ -492,7 +461,7 @@ export const AdminDashboard = () => {
                   className="px-3 py-1.5 rounded-xl font-bold text-rose-700 bg-rose-100 hover:bg-rose-200 flex items-center gap-1 transition-colors"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
-                  <span>Delete</span>
+                  <span>ഡിലീറ്റ്</span>
                 </button>
 
                 <button
@@ -508,17 +477,17 @@ export const AdminDashboard = () => {
         </div>
 
         {/* 3. Registrations Table */}
-        <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
           
           <div className="p-5 border-b border-slate-100 flex items-center justify-between">
             <h3 className="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
-              <span>All Participant Registrations</span>
+              <span>രജിസ്ട്രേഷൻ പട്ടിക (All Participants)</span>
               <span className="text-xs bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full font-bold">
                 {filteredRegistrations.length}
               </span>
             </h3>
             {loading && (
-              <span className="text-xs font-semibold text-brand-600 flex items-center gap-1">
+              <span className="text-xs font-semibold text-rose-600 flex items-center gap-1">
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                 <span>Syncing...</span>
               </span>
@@ -528,23 +497,22 @@ export const AdminDashboard = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-slate-50/70 border-b border-slate-200/80 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                <tr className="bg-slate-50 border-b border-slate-200 text-[11px] font-bold uppercase tracking-wider text-slate-500">
                   <th className="p-4 w-10 text-center">
                     <input
                       type="checkbox"
                       checked={filteredRegistrations.length > 0 && selectedIds.size === filteredRegistrations.length}
                       onChange={handleSelectAll}
-                      className="rounded text-brand-600 focus:ring-brand-500 cursor-pointer"
+                      className="rounded text-rose-600 focus:ring-rose-500 cursor-pointer"
                     />
                   </th>
                   <th className="p-4">Reg ID</th>
-                  <th className="p-4">Participant & Phone</th>
-                  <th className="p-4">Place</th>
-                  <th className="p-4">Food</th>
-                  <th className="p-4">Preferred Time</th>
+                  <th className="p-4">പേര് & മൊബൈൽ</th>
+                  <th className="p-4">സ്ഥലം</th>
+                  <th className="p-4">ഭക്ഷണം</th>
                   <th className="p-4">GPS / Maps</th>
-                  <th className="p-4">Registered Date</th>
-                  <th className="p-4">Status</th>
+                  <th className="p-4">തീയതി</th>
+                  <th className="p-4">സ്റ്റാറ്റസ്</th>
                   <th className="p-4 text-right">Actions</th>
                 </tr>
               </thead>
@@ -558,25 +526,22 @@ export const AdminDashboard = () => {
                       <tr 
                         key={r.id} 
                         className={`hover:bg-slate-50/80 transition-colors ${
-                          isSelected ? "bg-brand-50/40" : ""
+                          isSelected ? "bg-rose-50/40" : ""
                         }`}
                       >
-                        {/* Checkbox */}
                         <td className="p-4 text-center">
                           <input
                             type="checkbox"
                             checked={isSelected}
                             onChange={() => handleSelectRow(r.id)}
-                            className="rounded text-brand-600 focus:ring-brand-500 cursor-pointer"
+                            className="rounded text-rose-600 focus:ring-rose-500 cursor-pointer"
                           />
                         </td>
 
-                        {/* Registration ID */}
                         <td className="p-4 font-mono font-bold text-slate-800">
                           {r.registrationId}
                         </td>
 
-                        {/* Name & Phone */}
                         <td className="p-4">
                           <p className="font-bold text-slate-900 text-sm">{r.fullName}</p>
                           <p className="text-[11px] font-medium text-slate-500 mt-0.5">
@@ -584,28 +549,20 @@ export const AdminDashboard = () => {
                           </p>
                         </td>
 
-                        {/* Place */}
                         <td className="p-4 font-semibold text-slate-700">
                           {r.place}
                         </td>
 
-                        {/* Food */}
                         <td className="p-4">
                           <span className={`px-2.5 py-1 rounded-full font-bold text-[10px] uppercase tracking-wider ${
                             r.foodPreference === "Food Required"
                               ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                               : "bg-amber-50 text-amber-700 border border-amber-200"
                           }`}>
-                            {r.foodPreference}
+                            {r.foodPreference === "Food Required" ? "ഭക്ഷണം വേണം" : "വേണ്ട"}
                           </span>
                         </td>
 
-                        {/* Preferred Time */}
-                        <td className="p-4 text-slate-600 font-medium max-w-[160px] truncate" title={r.preferredTime}>
-                          {r.preferredTime}
-                        </td>
-
-                        {/* GPS Location & Maps link */}
                         <td className="p-4">
                           {mapsUrl ? (
                             <a
@@ -616,7 +573,7 @@ export const AdminDashboard = () => {
                               title={`Coordinates: ${r.latitude}, ${r.longitude}`}
                             >
                               <Navigation className="w-3 h-3 text-blue-600" />
-                              <span>View Maps</span>
+                              <span>Maps ലിങ്ക്</span>
                               <ExternalLink className="w-2.5 h-2.5" />
                             </a>
                           ) : (
@@ -624,12 +581,10 @@ export const AdminDashboard = () => {
                           )}
                         </td>
 
-                        {/* Registered Date */}
                         <td className="p-4 text-slate-500 text-[11px]">
                           {formatDateTime(r.registrationDate)}
                         </td>
 
-                        {/* Status Inline Dropdown */}
                         <td className="p-4">
                           <select
                             value={r.status || "Confirmed"}
@@ -651,10 +606,8 @@ export const AdminDashboard = () => {
                           </select>
                         </td>
 
-                        {/* Action Buttons */}
                         <td className="p-4 text-right">
                           <div className="flex items-center justify-end gap-1.5">
-                            {/* WhatsApp Button (Prompt Requirement #5) */}
                             <button
                               onClick={() => triggerWhatsAppSingle(r)}
                               className="p-2 rounded-xl text-emerald-600 hover:bg-emerald-50 border border-emerald-200 transition-colors"
@@ -663,29 +616,26 @@ export const AdminDashboard = () => {
                               <MessageCircle className="w-4 h-4 fill-current" />
                             </button>
 
-                            {/* View Details */}
                             <button
                               onClick={() => setViewParticipant(r)}
                               className="p-2 rounded-xl text-slate-600 hover:bg-slate-100 border border-slate-200 transition-colors"
-                              title="View full details"
+                              title="വിശദവിവരങ്ങൾ കാണുക"
                             >
                               <Eye className="w-4 h-4" />
                             </button>
 
-                            {/* Edit */}
                             <button
                               onClick={() => setEditParticipant(r)}
                               className="p-2 rounded-xl text-blue-600 hover:bg-blue-50 border border-blue-200 transition-colors"
-                              title="Edit registration"
+                              title="എഡിറ്റ് ചെയ്യുക"
                             >
                               <Edit className="w-4 h-4" />
                             </button>
 
-                            {/* Delete */}
                             <button
                               onClick={() => setDeleteConfirmId(r.id)}
                               className="p-2 rounded-xl text-rose-600 hover:bg-rose-50 border border-rose-200 transition-colors"
-                              title="Delete registration"
+                              title="ഡിലീറ്റ് ചെയ്യുക"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
@@ -696,12 +646,9 @@ export const AdminDashboard = () => {
                   })
                 ) : (
                   <tr>
-                    <td colSpan={10} className="p-12 text-center text-slate-400">
+                    <td colSpan={9} className="p-12 text-center text-slate-400">
                       <Users className="w-10 h-10 mx-auto text-slate-300 mb-2" />
-                      <p className="font-semibold text-slate-600">No registrations found</p>
-                      <p className="text-xs text-slate-400 mt-0.5">
-                        {searchTerm ? "Try adjusting your search or filters." : "New registrations will appear here automatically."}
-                      </p>
+                      <p className="font-semibold text-slate-600">രജിസ്ട്രേഷനുകൾ ഒന്നും ലഭിച്ചിട്ടില്ല</p>
                     </td>
                   </tr>
                 )}
@@ -713,7 +660,7 @@ export const AdminDashboard = () => {
 
       </div>
 
-      {/* WhatsApp Modal (Single or Bulk) */}
+      {/* WhatsApp Modal */}
       <WhatsAppModal
         isOpen={whatsAppModalOpen}
         onClose={() => {
@@ -725,13 +672,13 @@ export const AdminDashboard = () => {
         selectedParticipants={whatsAppSelectedList}
       />
 
-      {/* View Participant Details Modal */}
+      {/* View Participant Modal */}
       {viewParticipant && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Participant Profile</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">പങ്കാളിയുടെ പ്രൊഫൈൽ</span>
                 <h3 className="font-black text-lg text-slate-900">{viewParticipant.fullName}</h3>
               </div>
               <button 
@@ -742,62 +689,60 @@ export const AdminDashboard = () => {
               </button>
             </div>
 
-            <div className="space-y-2.5 text-xs">
+            <div className="space-y-2 text-xs">
               <div className="p-3 rounded-2xl bg-slate-50 flex items-center justify-between">
                 <span className="text-slate-500 font-semibold">Registration ID</span>
                 <span className="font-bold text-slate-900 font-mono">{viewParticipant.registrationId}</span>
               </div>
               <div className="p-3 rounded-2xl bg-slate-50 flex items-center justify-between">
-                <span className="text-slate-500 font-semibold">Mobile Number</span>
+                <span className="text-slate-500 font-semibold">മൊബൈൽ നമ്പർ</span>
                 <span className="font-bold text-slate-900">{formatDisplayPhone(viewParticipant.phoneNumber)}</span>
               </div>
               <div className="p-3 rounded-2xl bg-slate-50 flex items-center justify-between">
-                <span className="text-slate-500 font-semibold">Place / Location</span>
+                <span className="text-slate-500 font-semibold">സ്ഥലം</span>
                 <span className="font-bold text-slate-900">{viewParticipant.place}</span>
               </div>
               <div className="p-3 rounded-2xl bg-slate-50 flex items-center justify-between">
-                <span className="text-slate-500 font-semibold">Food Preference</span>
-                <span className="font-bold text-slate-900">{viewParticipant.foodPreference}</span>
+                <span className="text-slate-500 font-semibold">ഭക്ഷണ സൗകര്യം</span>
+                <span className="font-bold text-slate-900">
+                  {viewParticipant.foodPreference === "Food Required" ? "ഭക്ഷണം ആവശ്യമുണ്ട്" : "ഭക്ഷണം ആവശ്യമില്ല"}
+                </span>
               </div>
               <div className="p-3 rounded-2xl bg-slate-50 flex items-center justify-between">
-                <span className="text-slate-500 font-semibold">Preferred Session</span>
-                <span className="font-bold text-slate-900 text-right">{viewParticipant.preferredTime}</span>
-              </div>
-              <div className="p-3 rounded-2xl bg-slate-50 flex items-center justify-between">
-                <span className="text-slate-500 font-semibold">Status</span>
+                <span className="text-slate-500 font-semibold">സ്റ്റാറ്റസ്</span>
                 <span className="font-bold text-emerald-700">{viewParticipant.status || "Confirmed"}</span>
               </div>
               <div className="p-3 rounded-2xl bg-slate-50 flex items-center justify-between">
-                <span className="text-slate-500 font-semibold">Registered Timestamp</span>
+                <span className="text-slate-500 font-semibold">രജിസ്റ്റർ ചെയ്ത സമയം</span>
                 <span className="font-bold text-slate-800">{formatDateTime(viewParticipant.registrationDate)}</span>
               </div>
               {viewParticipant.latitude && viewParticipant.longitude && (
-                <div className="p-3 rounded-2xl bg-blue-50 border border-blue-200/80 flex items-center justify-between">
-                  <span className="text-blue-800 font-semibold">GPS Coordinates</span>
+                <div className="p-3 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-between">
+                  <span className="text-blue-800 font-semibold">GPS ലൊക്കേഷൻ</span>
                   <a
                     href={getGoogleMapsUrl(viewParticipant.latitude, viewParticipant.longitude)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-bold text-blue-700 underline flex items-center gap-1"
                   >
-                    <span>{viewParticipant.latitude.toFixed(4)}°, {viewParticipant.longitude.toFixed(4)}°</span>
+                    <span>Google Maps-ൽ കാണുക</span>
                     <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>
               )}
             </div>
 
-            <div className="pt-2 flex gap-2">
+            <div className="pt-2">
               <button
                 onClick={() => {
                   const p = viewParticipant;
                   setViewParticipant(null);
                   triggerWhatsAppSingle(p);
                 }}
-                className="flex-1 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5"
+                className="w-full py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5"
               >
                 <MessageCircle className="w-4 h-4" />
-                <span>Send WhatsApp Reminder</span>
+                <span>വാട്ട്‌സ്ആപ്പ് റിമൈൻഡർ അയക്കുക</span>
               </button>
             </div>
           </div>
@@ -809,7 +754,7 @@ export const AdminDashboard = () => {
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="font-black text-lg text-slate-900">Edit Registration</h3>
+              <h3 className="font-black text-lg text-slate-900">രജിസ്ട്രേഷൻ എഡിറ്റ് ചെയ്യുക</h3>
               <button 
                 onClick={() => setEditParticipant(null)}
                 className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400"
@@ -827,7 +772,6 @@ export const AdminDashboard = () => {
                     phoneNumber: editParticipant.phoneNumber,
                     place: editParticipant.place,
                     foodPreference: editParticipant.foodPreference,
-                    preferredTime: editParticipant.preferredTime,
                     status: editParticipant.status,
                   });
                   setEditParticipant(null);
@@ -838,56 +782,56 @@ export const AdminDashboard = () => {
               className="space-y-3 text-xs"
             >
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Full Name</label>
+                <label className="block font-bold text-slate-700 mb-1">പൂർണ്ണ നാമം</label>
                 <input
                   type="text"
                   required
                   value={editParticipant.fullName}
                   onChange={(e) => setEditParticipant({ ...editParticipant, fullName: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-brand-500 font-medium"
+                  className="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-rose-600 font-medium"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Phone Number</label>
+                <label className="block font-bold text-slate-700 mb-1">മൊബൈൽ നമ്പർ</label>
                 <input
                   type="text"
                   required
                   value={editParticipant.phoneNumber}
                   onChange={(e) => setEditParticipant({ ...editParticipant, phoneNumber: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-brand-500 font-medium"
+                  className="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-rose-600 font-medium"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Place / City</label>
+                <label className="block font-bold text-slate-700 mb-1">സ്ഥലം / മഹല്ല്</label>
                 <input
                   type="text"
                   required
                   value={editParticipant.place}
                   onChange={(e) => setEditParticipant({ ...editParticipant, place: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-brand-500 font-medium"
+                  className="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-rose-600 font-medium"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Food Preference</label>
+                <label className="block font-bold text-slate-700 mb-1">ഭക്ഷണ സൗകര്യം</label>
                 <select
                   value={editParticipant.foodPreference}
                   onChange={(e) => setEditParticipant({ ...editParticipant, foodPreference: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-brand-500 font-medium"
+                  className="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-rose-600 font-medium"
                 >
-                  <option value="Food Required">Food Required</option>
-                  <option value="Food Not Required">Food Not Required</option>
+                  <option value="Food Required">ഭക്ഷണം ആവശ്യമുള്ളവർ</option>
+                  <option value="Food Not Required">ഭക്ഷണം ആവശ്യമില്ലാത്തവർ</option>
                 </select>
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Status</label>
+                <label className="block font-bold text-slate-700 mb-1">സ്റ്റാറ്റസ്</label>
                 <select
                   value={editParticipant.status || "Confirmed"}
                   onChange={(e) => setEditParticipant({ ...editParticipant, status: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-brand-500 font-medium"
+                  className="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-rose-600 font-medium"
                 >
                   <option value="Confirmed">Confirmed</option>
                   <option value="Attended">Attended</option>
@@ -902,13 +846,13 @@ export const AdminDashboard = () => {
                   onClick={() => setEditParticipant(null)}
                   className="w-1/2 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold text-slate-700"
                 >
-                  Cancel
+                  റദ്ദാക്കുക
                 </button>
                 <button
                   type="submit"
-                  className="w-1/2 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 font-bold text-white shadow-xs"
+                  className="w-1/2 py-2.5 rounded-xl bg-rose-700 hover:bg-rose-800 font-bold text-white shadow-xs"
                 >
-                  Save Changes
+                  മാറ്റങ്ങൾ സേവ് ചെയ്യുക
                 </button>
               </div>
             </form>
@@ -923,22 +867,22 @@ export const AdminDashboard = () => {
             <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 mx-auto flex items-center justify-center">
               <Trash2 className="w-6 h-6" />
             </div>
-            <h3 className="font-black text-lg text-slate-900">Confirm Deletion</h3>
+            <h3 className="font-black text-lg text-slate-900">രജിസ്ട്രേഷൻ നീക്കം ചെയ്യുക</h3>
             <p className="text-xs text-slate-500">
-              Are you sure you want to delete this participant's registration? This action is permanent and cannot be reversed in Firebase.
+              ഈ പങ്കാളിയുടെ രജിസ്ട്രേഷൻ ഡാറ്റാബേസിൽ നിന്ന് പൂർണ്ണമായും ഡിലീറ്റ് ചെയ്യപ്പെടും. ഈ പ്രവർത്തനം മാറ്റാൻ കഴിയില്ല.
             </p>
             <div className="flex gap-2 pt-2">
               <button
                 onClick={() => setDeleteConfirmId(null)}
                 className="w-1/2 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700"
               >
-                Cancel
+                റദ്ദാക്കുക
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirmId)}
                 className="w-1/2 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-xs font-bold text-white shadow-sm"
               >
-                Delete Record
+                ഡിലീറ്റ് ചെയ്യുക
               </button>
             </div>
           </div>
@@ -948,4 +892,3 @@ export const AdminDashboard = () => {
     </div>
   );
 };
-

@@ -1,38 +1,46 @@
 import { formatForWhatsApp } from "../utils/validators";
 
 /**
- * WhatsApp Click-to-Chat Service
+ * WhatsApp Click-to-Chat Service for Wisdom Women Conference - Iritty Mandalam
  */
 
 export const DEFAULT_REMINDER_TEMPLATE = 
-`Assalamu Alaikum {Name},
+`അസ്സലാമു അലൈക്കും {Name},
 
-This is a friendly reminder regarding your registration for the Women's Conference.
+വിസ്ഡം വിമൻ ഇരിട്ടി മണ്ഡലം വനിതാ സമ്മേളനത്തിലേക്ക് താങ്കൾ വിജയകരമായി രജിസ്റ്റർ ചെയ്തിട്ടുണ്ട്.
 
-Registration ID: {RegistrationId}
-Place: {Place}
-Food Preference: {FoodPreference}
-Preferred Time: {PreferredTime}
+📋 രജിസ്ട്രേഷൻ വിവരങ്ങൾ:
+• Reg ID: {RegistrationId}
+• സ്ഥലം: {Place}
+• തീയതി: 2026 നവംബർ 21 ശനി
+• സമയം: രാവിലെ 9:30 മുതൽ വൈകുന്നേരം 4:00 വരെ
+• വേദി: ചോയ്സ് ഓഡിറ്റോറിയം, നുച്ച്യാട് റോഡ്, ഉളിക്കൽ
+• ഭക്ഷണം: {FoodPreference}
 
-Please contact us if you have any changes or queries.
+സമ്മേളനത്തിൽ കൃത്യസമയത്ത് എത്തിച്ചേരുവാൻ അഭ്യർത്ഥിക്കുന്നു.
 
-Thank you!`;
+നന്ദി,
+വിസ്ഡം വിമൻ ഇരിട്ടി സോൺ`;
 
 export const GENERAL_ANNOUNCEMENT_TEMPLATE =
-`Assalamu Alaikum {Name},
+`അസ്സലാമു അലൈക്കും {Name},
 
-Important Update regarding Women's Conference:
-We look forward to welcoming you!
+ഇരിട്ടി മണ്ഡലം വനിതാ സമ്മേളനം (2026 നവംബർ 21 ശനി)
 
-Your Registration ID: {RegistrationId}
-Session: {PreferredTime}
-Venue: Grand Convention Center
-Food Service: {FoodPreference}
+വേദി: ചോയ്സ് ഓഡിറ്റോറിയം, നുച്ച്യാട് റോഡ്, ഉളിക്കൽ
+സമയം: രാവിലെ 9:30 മുതൽ വൈകുന്നേരം 4:00 വരെ
+Reg ID: {RegistrationId}
 
-Please arrive 15 minutes before your session begins.
+പങ്കെടുക്കുന്നവർ:
+• ഡോ. ജൗഹർ മുനവ്വർ
+• ടി.കെ ഉബൈദ്
+• ഹാരിസ് കായക്കൊടി
+• റഊഫ ടീച്ചർ
+• ഷഫീഖ് സ്വലാഹി
+• നജീബ ടീച്ചർ
 
-Warm regards,
-Organizing Committee`;
+മുഴുവൻ സ്ത്രീകളെയും ആദരപൂർവ്വം സ്വാഗതം ചെയ്യുന്നു.
+വിസ്ഡം വിമൻ ഇരിട്ടി സോൺ`;
 
 /**
  * Generate formatted reminder message replacing placeholders
@@ -40,17 +48,14 @@ Organizing Committee`;
 export const generateMessage = (template, participant) => {
   if (!participant) return "";
   return template
-    .replace(/{Name}/g, participant.fullName || "Participant")
+    .replace(/{Name}/g, participant.fullName || "സഹോദരി")
     .replace(/{RegistrationId}/g, participant.registrationId || "N/A")
     .replace(/{Place}/g, participant.place || "N/A")
-    .replace(/{FoodPreference}/g, participant.foodPreference || "Not specified")
-    .replace(/{PreferredTime}/g, participant.preferredTime || "General");
+    .replace(/{FoodPreference}/g, participant.foodPreference === "Food Required" ? "ഭക്ഷണം ആവശ്യമുള്ളവർ" : "ഭക്ഷണം ആവശ്യമില്ലാത്തവർ");
 };
 
 /**
  * Build the wa.me URL
- * IMPORTANT: wa.me requires phone number without '+' or symbols, prefixed with country code
- * e.g., 919876543210
  */
 export const getWhatsAppUrl = (phone, text) => {
   const formattedPhone = formatForWhatsApp(phone);
@@ -60,7 +65,6 @@ export const getWhatsAppUrl = (phone, text) => {
 
 /**
  * Opens WhatsApp in a new tab with prefilled text
- * User must manually review and press "Send" in WhatsApp
  */
 export const openWhatsApp = (phone, text) => {
   if (!phone) {
@@ -76,16 +80,17 @@ export const openWhatsApp = (phone, text) => {
  * Generate a shareable WhatsApp text for participant confirmation
  */
 export const generateSelfConfirmationShare = (registration) => {
-  return `✨ *Women's Conference 2026 - Registration Confirmation* ✨
+  return `✨ *വിസ്ഡം വിമൻ വനിതാ സമ്മേളനം - ഇരിട്ടി മണ്ഡലം* ✨
+"വിശ്വാസത്തിൽ കരുത്ത്... ആദർശത്തിൽ മാതൃക... ജീവിതത്തിൽ വിശുദ്ധി!"
 
-Assalamu Alaikum! I have successfully registered for the Women's Conference.
+അസ്സലാമു അലൈക്കും! ഞാൻ വനിതാ സമ്മേളനത്തിലേക്ക് രജിസ്റ്റർ ചെയ്തു.
 
-*Registration ID:* ${registration.registrationId}
-*Name:* ${registration.fullName}
-*Place:* ${registration.place}
-*Food Preference:* ${registration.foodPreference}
-*Preferred Time:* ${registration.preferredTime}
+• *Reg ID:* ${registration.registrationId}
+• *പേര്:* ${registration.fullName}
+• *സ്ഥലം:* ${registration.place}
+• *തീയതി:* 2026 നവംബർ 21 ശനി (രാവിലെ 9:30 - വൈകിട്ട് 4:00)
+• *വേദി:* ചോയ്സ് ഓഡിറ്റോറിയം, നുച്ച്യാട് റോഡ്, ഉളിക്കൽ
+• *ഭക്ഷണം:* ${registration.foodPreference === "Food Required" ? "ഭക്ഷണം ആവശ്യമുണ്ട്" : "ഭക്ഷണം ആവശ്യമില്ല"}
 
-Join us for an inspiring experience!`;
+എല്ലാവരെയും സ്നേഹപൂർവ്വം ക്ഷണിക്കുന്നു!`;
 };
-

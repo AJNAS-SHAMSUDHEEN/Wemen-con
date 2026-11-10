@@ -2,154 +2,139 @@ import React from "react";
 import { 
   Calendar, 
   MapPin, 
-  Users, 
-  Utensils, 
   Clock, 
+  Users, 
   Sparkles, 
   ArrowRight,
   ShieldCheck,
-  CheckCircle2
+  CheckCircle2,
+  Mic2
 } from "lucide-react";
 
 export const HeroSection = ({ 
-  stats = { total: 0, foodCount: 0, placesCount: 0 },
-  onRegisterClick,
-  onViewParticipantsClick
+  totalCount = 0,
+  onRegisterClick 
 }) => {
   return (
-    <div className="relative overflow-hidden pt-8 pb-16 lg:pt-14 lg:pb-24">
-      {/* Decorative gradient blobs */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 -z-10 opacity-40 blur-3xl pointer-events-none">
-        <div className="w-full h-full bg-gradient-to-tr from-brand-300 via-rose-200 to-indigo-200 rounded-full animate-gradient"></div>
+    <div className="relative overflow-hidden pt-6 pb-12 lg:pt-10 lg:pb-20">
+      {/* Background Decorative element */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-80 -z-10 opacity-30 blur-3xl pointer-events-none">
+        <div className="w-full h-full bg-gradient-to-tr from-rose-400 via-amber-200 to-rose-200 rounded-full"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-50 border border-brand-200/80 text-brand-700 text-xs sm:text-sm font-bold tracking-wide shadow-xs mb-6">
-            <Sparkles className="w-4 h-4 text-brand-600 animate-pulse" />
-            <span>Grand Annual Gathering • Women's Empowerment 2026</span>
+        
+        {/* Top Organizations Banner */}
+        <div className="flex items-center justify-between border-b border-rose-100/80 pb-4 mb-8 text-xs font-bold text-slate-600">
+          <div className="flex items-center gap-2">
+            <span className="text-rose-600 font-extrabold text-sm sm:text-base tracking-tight">WISDOM Girls</span>
           </div>
-
-          {/* Heading */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-[1.15] mb-6">
-            Inspiring Leadership,{" "}
-            <span className="bg-gradient-to-r from-brand-600 via-rose-500 to-amber-600 bg-clip-text text-transparent">
-              Empowering Voices
-            </span>
-          </h1>
-
-          {/* Subtitle */}
-          <p className="text-lg sm:text-xl text-slate-600 leading-relaxed font-normal mb-8 max-w-2xl mx-auto">
-            Join thousands of visionary women leaders, students, educators, and changemakers for three transformative days of knowledge, connection, and spiritual growth.
-          </p>
-
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-12">
-            <button
-              onClick={onRegisterClick}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-bold text-white bg-gradient-to-r from-brand-600 via-brand-500 to-rose-500 hover:from-brand-700 hover:to-rose-600 shadow-lg shadow-brand-500/30 hover:shadow-xl hover:shadow-brand-500/40 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-3 group"
-            >
-              <span>Register as Participant</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button
-              onClick={onViewParticipantsClick}
-              className="w-full sm:w-auto px-7 py-4 rounded-2xl text-base font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 shadow-sm hover:shadow transition-all flex items-center justify-center gap-2.5"
-            >
-              <Users className="w-5 h-5 text-slate-500" />
-              <span>View Registered List</span>
-              <span className="text-xs px-2 py-0.5 font-extrabold rounded-full bg-brand-100 text-brand-700">
-                {stats.total}
-              </span>
-            </button>
+          <div className="text-center hidden sm:block text-slate-400 font-semibold tracking-wide text-[11px] uppercase">
+            ഇരിട്ടി മണ്ഡലം
           </div>
-
-          {/* Key Event Highlights pills */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 max-w-2xl mx-auto text-left">
-            <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/80 border border-slate-200/70 shadow-xs backdrop-blur-xs">
-              <div className="w-10 h-10 rounded-xl bg-pink-100/80 text-brand-600 flex items-center justify-center shrink-0">
-                <Calendar className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-[11px] font-bold uppercase text-slate-400 tracking-wider">Date & Duration</p>
-                <p className="text-xs sm:text-sm font-bold text-slate-800">Dec 12 - 14, 2026</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/80 border border-slate-200/70 shadow-xs backdrop-blur-xs">
-              <div className="w-10 h-10 rounded-xl bg-emerald-100/80 text-emerald-600 flex items-center justify-center shrink-0">
-                <MapPin className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-[11px] font-bold uppercase text-slate-400 tracking-wider">Venue</p>
-                <p className="text-xs sm:text-sm font-bold text-slate-800">Grand Convention Center</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/80 border border-slate-200/70 shadow-xs backdrop-blur-xs">
-              <div className="w-10 h-10 rounded-xl bg-amber-100/80 text-amber-600 flex items-center justify-center shrink-0">
-                <Utensils className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-[11px] font-bold uppercase text-slate-400 tracking-wider">Hospitality</p>
-                <p className="text-xs sm:text-sm font-bold text-slate-800">Complimentary Food</p>
-              </div>
-            </div>
+          <div className="flex items-center gap-2">
+            <span className="text-slate-800 font-black text-xs sm:text-sm tracking-wider uppercase">WISDOM ISLAMIC ORGANIZATION</span>
           </div>
         </div>
 
-        {/* Live Counters Banner */}
-        <div className="mt-14 max-w-4xl mx-auto">
-          <div className="p-1 rounded-3xl bg-gradient-to-r from-brand-500/20 via-rose-300/20 to-indigo-300/20 shadow-xl shadow-brand-500/5">
-            <div className="bg-white rounded-[22px] p-6 sm:p-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-slate-100">
-              
-              <div className="pt-2 md:pt-0">
-                <div className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight flex items-center justify-center gap-1.5">
-                  <span className="text-brand-600">{stats.total}</span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          
+          {/* Left Column: Event Information */}
+          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
+            
+            {/* Slogan Badge */}
+            <div className="inline-flex flex-col sm:flex-row items-center gap-1.5 px-4 py-2 rounded-2xl bg-white border border-rose-200/90 shadow-xs text-xs font-bold text-rose-900 mx-auto lg:mx-0">
+              <span className="text-rose-700">വിശ്വാസത്തിൽ കരുത്ത്...</span>
+              <span className="hidden sm:inline text-rose-300">•</span>
+              <span className="text-amber-800">ആദർശത്തിൽ മാതൃക...</span>
+              <span className="hidden sm:inline text-rose-300">•</span>
+              <span className="text-emerald-800">ജീവിതത്തിൽ വിശുദ്ധി!</span>
+            </div>
+
+            {/* Sub-theme */}
+            <p className="text-xs uppercase tracking-widest font-extrabold text-slate-500">
+              വിശ്വാസം • വിജ്ഞാനം • വിമോചനം
+            </p>
+
+            {/* Main Title */}
+            <div>
+              <div className="inline-block px-3 py-1 bg-rose-50 text-rose-700 rounded-lg text-sm font-extrabold mb-2 border border-rose-200">
+                ഇരിട്ടി മണ്ഡലം
+              </div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-[1.2]">
+                <span className="italic font-serif text-[#981b37] pr-2">Women</span>
+                വനിതാ സമ്മേളനം
+              </h1>
+            </div>
+
+            {/* Date, Time & Venue Highlight Card */}
+            <div className="p-5 rounded-3xl bg-white border border-rose-100 shadow-md shadow-rose-900/5 grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center shrink-0 mt-0.5">
+                  <Calendar className="w-5 h-5" />
                 </div>
-                <p className="text-xs sm:text-sm font-semibold text-slate-500 mt-1 flex items-center justify-center gap-1">
-                  <Users className="w-3.5 h-3.5 text-brand-500" />
-                  <span>Total Registered</span>
-                </p>
+                <div>
+                  <p className="text-[11px] font-bold uppercase text-slate-400">തീയതി & സമയം</p>
+                  <p className="text-sm font-black text-slate-900">2026 നവംബർ 21 ശനി</p>
+                  <p className="text-xs text-slate-500 mt-0.5 font-medium flex items-center gap-1">
+                    <Clock className="w-3 h-3 text-slate-400" />
+                    <span>രാവിലെ 9:30 മുതൽ വൈകുന്നേരം 4:00 വരെ</span>
+                  </p>
+                </div>
               </div>
 
-              <div className="pt-2 md:pt-0">
-                <div className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight flex items-center justify-center gap-1.5">
-                  <span className="text-emerald-600">{stats.foodCount}</span>
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                  <MapPin className="w-5 h-5" />
                 </div>
-                <p className="text-xs sm:text-sm font-semibold text-slate-500 mt-1 flex items-center justify-center gap-1">
-                  <Utensils className="w-3.5 h-3.5 text-emerald-500" />
-                  <span>Meals Requested</span>
-                </p>
-              </div>
-
-              <div className="pt-4 md:pt-0">
-                <div className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight flex items-center justify-center gap-1.5">
-                  <span className="text-indigo-600">{stats.placesCount}</span>
+                <div>
+                  <p className="text-[11px] font-bold uppercase text-slate-400">വേദി</p>
+                  <p className="text-sm font-black text-slate-900">ഉളിക്കൽ</p>
+                  <p className="text-xs text-slate-500 mt-0.5 font-medium">
+                    ചോയ്സ് ഓഡിറ്റോറിയം, നുച്ച്യാട് റോഡ്
+                  </p>
                 </div>
-                <p className="text-xs sm:text-sm font-semibold text-slate-500 mt-1 flex items-center justify-center gap-1">
-                  <MapPin className="w-3.5 h-3.5 text-indigo-500" />
-                  <span>Places Represented</span>
-                </p>
               </div>
+            </div>
 
-              <div className="pt-4 md:pt-0">
-                <div className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight flex items-center justify-center gap-1.5">
-                  <span className="text-amber-600">100%</span>
-                </div>
-                <p className="text-xs sm:text-sm font-semibold text-slate-500 mt-1 flex items-center justify-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Free Registration</span>
-                </p>
+            {/* Registration CTA Button */}
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
+              <button
+                onClick={onRegisterClick}
+                className="w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-bold text-white bg-gradient-to-r from-[#981b37] via-[#b91c47] to-[#d62254] hover:from-[#7e142c] hover:to-[#b91c47] shadow-lg shadow-rose-900/20 hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2.5"
+              >
+                <span>സൗജന്യമായി രജിസ്റ്റർ ചെയ്യുക</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <div className="px-5 py-3 rounded-2xl bg-rose-50 border border-rose-200/80 text-rose-800 text-xs font-bold flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>മുഴുവൻ സ്ത്രീകൾക്കും സ്വാഗതം</span>
               </div>
+            </div>
 
+          </div>
+
+          {/* Right Column: Poster Image Preview */}
+          <div className="lg:col-span-5 flex justify-center">
+            <div className="relative max-w-sm sm:max-w-md w-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white group">
+              <img
+                src="/poster.jpg"
+                alt="Wisdom Women വനിതാ സമ്മേളനം ഇരിട്ടി മണ്ഡലം"
+                className="w-full h-auto object-cover group-hover:scale-102 transition-transform duration-300"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
+              <div className="bg-[#981b37] text-white py-2 text-center text-xs font-extrabold tracking-wider uppercase">
+                WISDOM WOMEN IRITTY ZONE
+              </div>
             </div>
           </div>
+
         </div>
 
       </div>
     </div>
   );
 };
-

@@ -5,25 +5,21 @@ import { Footer } from "./components/Footer";
 import { HomePage } from "./pages/HomePage";
 import { AdminLogin } from "./pages/AdminLogin";
 import { AdminDashboard } from "./pages/AdminDashboard";
-import { subscribeToPublicParticipants } from "./services/registrationService";
+import { subscribeToRegistrationCount } from "./services/registrationService";
 
 function AppContent() {
   const [currentView, setCurrentView] = useState("home"); // "home" | "admin"
-  const [participants, setParticipants] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
   const { currentUser } = useAuth();
 
-  // Real-time public subscription to Cloud Firestore
+  // Listen to total count for public counter banner (no sensitive data exposed)
   useEffect(() => {
-    setLoading(true);
-    const unsubscribe = subscribeToPublicParticipants(
-      (data) => {
-        setParticipants(data);
-        setLoading(false);
+    const unsubscribe = subscribeToRegistrationCount(
+      (count) => {
+        setTotalCount(count);
       },
       (err) => {
-        console.error("Public participants listener error:", err);
-        setLoading(false);
+        console.error("Count listener error:", err);
       }
     );
 
@@ -31,18 +27,17 @@ function AppContent() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+    <div className="min-h-screen flex flex-col bg-[#faf8f5] text-slate-900 font-sans">
       {/* Top Navigation */}
       <Navbar
         currentView={currentView}
         setCurrentView={setCurrentView}
-        participantCount={participants.length}
       />
 
-      {/* Main View Switcher */}
+      {/* Main View: Public vs Admin */}
       <div className="flex-1">
         {currentView === "home" ? (
-          <HomePage participants={participants} loading={loading} />
+          <HomePage totalCount={totalCount} />
         ) : (
           currentUser ? (
             <AdminDashboard />
@@ -65,4 +60,3 @@ export default function App() {
     </AuthProvider>
   );
 }
-
