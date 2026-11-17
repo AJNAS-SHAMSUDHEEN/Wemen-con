@@ -188,7 +188,7 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
                 type="text"
                 value={formData.fullName}
                 onChange={(e) => handleChange("fullName", e.target.value)}
-                placeholder="ഉദാ: ഫാത്തിമ സഹ്റ"
+                placeholder="നിങ്ങളുടെ പൂർണ്ണ നാമം നൽകുക"
                 className={`w-full pl-10 pr-4 py-3 rounded-2xl border text-sm font-medium transition-all outline-none ${errors.fullName
                   ? "border-rose-300 bg-rose-50/40 focus:ring-4 focus:ring-rose-500/10"
                   : "border-slate-200 bg-white hover:border-lavender-300 focus:border-lavender-600 focus:ring-4 focus:ring-lavender-500/15"
@@ -230,7 +230,7 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
                 type="tel"
                 value={formData.phoneNumber}
                 onChange={(e) => handleChange("phoneNumber", e.target.value)}
-                placeholder="9876543210"
+                placeholder="10 അക്ക വാട്സ്ആപ്പ് നമ്പർ നൽകുക"
                 maxLength={14}
                 className={`w-full pl-20 pr-4 py-3 rounded-xl border text-sm font-medium transition-all outline-none bg-white ${errors.phoneNumber
                   ? "border-rose-400 bg-rose-50/40 focus:ring-4 focus:ring-rose-500/10"
@@ -271,7 +271,7 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
                 type="text"
                 value={formData.place}
                 onChange={(e) => handleChange("place", e.target.value)}
-                placeholder="ഉദാ: ഉളിക്കൽ, ഇരിട്ടി, പായം, നുച്ച്യാട്..."
+                placeholder="നിങ്ങളുടെ സ്ഥലം രേഖപ്പെടുത്തുക"
                 className={`w-full pl-10 pr-4 py-3 rounded-xl border text-sm font-medium transition-all outline-none bg-white ${errors.place
                   ? "border-rose-400 bg-rose-50/40 focus:ring-4 focus:ring-rose-500/10"
                   : "border-lavender-300 focus:border-lavender-600 focus:ring-4 focus:ring-lavender-500/20"
