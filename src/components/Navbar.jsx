@@ -24,30 +24,20 @@ export const Navbar = ({ currentView, setCurrentView, onOpenDetails }) => {
   return (
     <>
       {/* Minimal Header App Bar: Pure White background with subtle lavender border */}
-      <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-lavender-200/80 transition-all font-ml">
+      <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-lavender-200/80 transition-all font-sans">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 h-16 sm:h-18 flex items-center justify-between">
           
-          {/* Left: Provided Logo & Minimal Title "പഞ്ചസമ്മേളനം" */}
+          {/* Left: Text "WISDOM WOMENS IRITTY" */}
           <div 
             onClick={() => handleNav("home")}
-            className="flex items-center gap-3 cursor-pointer group select-none"
+            className="cursor-pointer group select-none"
           >
-            <div className="flex items-center justify-center">
-              <img 
-                src="/logo.png" 
-                alt="Logo" 
-                className="h-8 sm:h-9 w-auto max-h-9 object-contain"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
-              />
-            </div>
-            <h1 className="font-black text-xl sm:text-2xl text-slate-900 tracking-tight">
-              പഞ്ചസമ്മേളനം
+            <h1 className="font-extrabold text-base sm:text-lg tracking-wider text-slate-900 uppercase">
+              WISDOM WOMENS IRITTY
             </h1>
           </div>
 
-          {/* Right: Only the Hamburger Menu Button */}
+          {/* Right: Only the Menu Button */}
           <div className="flex items-center">
             <button
               onClick={() => setSidebarOpen(true)}
@@ -77,17 +67,9 @@ export const Navbar = ({ currentView, setCurrentView, onOpenDetails }) => {
             <div>
               {/* Sidebar Header */}
               <div className="flex items-center justify-between border-b border-lavender-100 pb-4 mb-6">
-                <div className="flex items-center gap-2.5">
-                  <img 
-                    src="/logo.png" 
-                    alt="Logo" 
-                    className="h-6 w-auto object-contain"
-                    onError={(e) => { e.target.style.display = 'none'; }}
-                  />
-                  <span className="font-extrabold text-base text-slate-900">
-                    പഞ്ചസമ്മേളനം
-                  </span>
-                </div>
+                <span className="font-extrabold text-sm sm:text-base tracking-wider text-slate-900 uppercase">
+                  WISDOM WOMENS IRITTY
+                </span>
                 <button
                   onClick={() => setSidebarOpen(false)}
                   className="p-1.5 rounded-xl hover:bg-lavender-100 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"

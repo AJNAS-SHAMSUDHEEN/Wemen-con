@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import confetti from "canvas-confetti";
-import { 
-  CheckCircle2, 
-  Copy, 
-  Check, 
-  Share2, 
-  Printer, 
-  X, 
-  MapPin, 
-  Calendar, 
-  Clock, 
-  Phone, 
+import {
+  CheckCircle2,
+  Copy,
+  Check,
+  Share2,
+  Printer,
+  X,
+  MapPin,
+  Calendar,
+  Clock,
+  Phone,
   User,
   Baby
 } from "lucide-react";
@@ -54,7 +54,7 @@ export const SuccessModal = ({ registration, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 sm:p-6 animate-fadeIn font-ml">
       <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-lavender-200 overflow-hidden">
-        
+
         {/* Header Ribbon - Elegant Lavender */}
         <div className="bg-gradient-to-r from-lavender-700 via-lavender-600 to-lavender-500 p-6 text-white text-center relative overflow-hidden">
           <button
@@ -82,7 +82,7 @@ export const SuccessModal = ({ registration, onClose }) => {
 
         {/* Modal Printable Card Body */}
         <div id="printable-pass" className="p-6 space-y-4 bg-white">
-          
+
           {/* Unique ID Highlight Box */}
           <div className="p-4 rounded-2xl bg-lavender-50/80 border border-lavender-200 flex items-center justify-between">
             <div>

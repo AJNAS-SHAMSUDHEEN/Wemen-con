@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { 
-  User, 
-  Phone, 
-  MapPin, 
-  AlertCircle, 
-  Loader2, 
+import {
+  User,
+  Phone,
+  MapPin,
+  AlertCircle,
+  Loader2,
   Sparkles,
   Calendar,
   Clock,
@@ -12,9 +12,9 @@ import {
   Info,
   Baby
 } from "lucide-react";
-import { 
-  validateIndianMobile, 
-  validateFullName, 
+import {
+  validateIndianMobile,
+  validateFullName,
   validatePlace,
 } from "../utils/validators";
 import { createRegistration } from "../services/registrationService";
@@ -114,7 +114,7 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
     <div id="register" className="w-full max-w-lg mx-auto font-ml">
       {/* Pure White Card with Lavender Border & Soft Shadow */}
       <div className="bg-white rounded-3xl border border-lavender-200/90 shadow-xl shadow-lavender-900/5 overflow-hidden transition-all">
-        
+
         {/* Soft Lavender Card Header */}
         <div className="bg-gradient-to-br from-lavender-100 via-lavender-50 to-white px-6 sm:px-8 py-6 sm:py-7 border-b border-lavender-200/80 relative">
           <div className="flex items-center justify-between gap-2 mb-2">
@@ -189,11 +189,10 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
                 value={formData.fullName}
                 onChange={(e) => handleChange("fullName", e.target.value)}
                 placeholder="ഉദാ: ഫാത്തിമ സഹ്റ"
-                className={`w-full pl-10 pr-4 py-3 rounded-2xl border text-sm font-medium transition-all outline-none ${
-                  errors.fullName 
-                    ? "border-rose-300 bg-rose-50/40 focus:ring-4 focus:ring-rose-500/10" 
-                    : "border-slate-200 bg-white hover:border-lavender-300 focus:border-lavender-600 focus:ring-4 focus:ring-lavender-500/15"
-                }`}
+                className={`w-full pl-10 pr-4 py-3 rounded-2xl border text-sm font-medium transition-all outline-none ${errors.fullName
+                  ? "border-rose-300 bg-rose-50/40 focus:ring-4 focus:ring-rose-500/10"
+                  : "border-slate-200 bg-white hover:border-lavender-300 focus:border-lavender-600 focus:ring-4 focus:ring-lavender-500/15"
+                  }`}
               />
             </div>
             {errors.fullName && (
@@ -233,11 +232,10 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
                 onChange={(e) => handleChange("phoneNumber", e.target.value)}
                 placeholder="9876543210"
                 maxLength={14}
-                className={`w-full pl-20 pr-4 py-3 rounded-xl border text-sm font-medium transition-all outline-none bg-white ${
-                  errors.phoneNumber 
-                    ? "border-rose-400 bg-rose-50/40 focus:ring-4 focus:ring-rose-500/10" 
-                    : "border-lavender-300 focus:border-lavender-600 focus:ring-4 focus:ring-lavender-500/20"
-                }`}
+                className={`w-full pl-20 pr-4 py-3 rounded-xl border text-sm font-medium transition-all outline-none bg-white ${errors.phoneNumber
+                  ? "border-rose-400 bg-rose-50/40 focus:ring-4 focus:ring-rose-500/10"
+                  : "border-lavender-300 focus:border-lavender-600 focus:ring-4 focus:ring-lavender-500/20"
+                  }`}
               />
             </div>
             {errors.phoneNumber ? (
@@ -274,11 +272,10 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
                 value={formData.place}
                 onChange={(e) => handleChange("place", e.target.value)}
                 placeholder="ഉദാ: ഉളിക്കൽ, ഇരിട്ടി, പായം, നുച്ച്യാട്..."
-                className={`w-full pl-10 pr-4 py-3 rounded-xl border text-sm font-medium transition-all outline-none bg-white ${
-                  errors.place 
-                    ? "border-rose-400 bg-rose-50/40 focus:ring-4 focus:ring-rose-500/10" 
-                    : "border-lavender-300 focus:border-lavender-600 focus:ring-4 focus:ring-lavender-500/20"
-                }`}
+                className={`w-full pl-10 pr-4 py-3 rounded-xl border text-sm font-medium transition-all outline-none bg-white ${errors.place
+                  ? "border-rose-400 bg-rose-50/40 focus:ring-4 focus:ring-rose-500/10"
+                  : "border-lavender-300 focus:border-lavender-600 focus:ring-4 focus:ring-lavender-500/20"
+                  }`}
               />
             </div>
             {errors.place && (

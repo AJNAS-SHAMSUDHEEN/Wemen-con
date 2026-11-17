@@ -142,7 +142,7 @@ export const subscribeToRegistrationCount = (onCount, onError) => {
       }
     );
   } catch (err) {
-    return () => {};
+    return () => { };
   }
 };
 
