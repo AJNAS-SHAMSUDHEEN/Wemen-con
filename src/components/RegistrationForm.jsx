@@ -299,8 +299,8 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
                 </span>
               </div>
               <span className="text-[11px] font-bold text-lavender-700 bg-lavender-50 px-2 py-0.5 rounded-md border border-lavender-200/60">
-                {Number(formData.childrenCount) > 0 
-                  ? `${formData.childrenCount} കുട്ടികൾ` 
+                {Number(formData.childrenCount) > 0
+                  ? `${formData.childrenCount} കുട്ടികൾ`
                   : "കുട്ടികളില്ല (0)"}
               </span>
             </div>
@@ -342,11 +342,10 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
                       key={count}
                       type="button"
                       onClick={() => handleChange("childrenCount", count)}
-                      className={`h-10 px-3.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none ${
-                        isSelected
-                          ? "bg-lavender-600 text-white shadow-xs"
-                          : "bg-lavender-50 hover:bg-lavender-100 text-lavender-900 border border-lavender-200"
-                      }`}
+                      className={`h-10 px-3.5 rounded-xl text-xs font-bold transition-all cursor-pointer select-none ${isSelected
+                        ? "bg-lavender-600 text-white shadow-xs"
+                        : "bg-lavender-50 hover:bg-lavender-100 text-lavender-900 border border-lavender-200"
+                        }`}
                     >
                       {count === 0 ? "കുട്ടികളില്ല (0)" : `${count}`}
                     </button>

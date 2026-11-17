@@ -82,7 +82,7 @@ export const createRegistration = async ({
     conferenceName: "Wisdom Women Conference — Iritty Mandalam",
     eventDate: "2026 November 21, Saturday",
     venue: "Choice Auditorium, Nuchiyad Road, Ulikkal",
-    status: "Confirmed",
+    status: "Registered",
     notes: "",
     registrationDate: serverTimestamp(),
     createdAt: new Date().toISOString(),
