@@ -14,6 +14,7 @@ export const exportToCSV = (registrations, filename = "womens_conference_registr
     "Full Name",
     "Phone Number",
     "Place",
+    "Children Count",
     "Status",
     "Registration Date",
     "Notes"
@@ -24,6 +25,7 @@ export const exportToCSV = (registrations, filename = "womens_conference_registr
     `"${(r.fullName || "").replace(/"/g, '""')}"`,
     `"${r.phoneNumber || ""}"`,
     `"${(r.place || "").replace(/"/g, '""')}"`,
+    `"${r.childrenCount ?? 0}"`,
     `"${r.status || "Confirmed"}"`,
     `"${formatDateTime(r.registrationDate)}"`,
     `"${(r.notes || "").replace(/"/g, '""')}"`

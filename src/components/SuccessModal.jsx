@@ -11,7 +11,8 @@ import {
   Calendar, 
   Clock, 
   Phone, 
-  User
+  User,
+  Baby
 } from "lucide-react";
 import { formatDisplayPhone } from "../utils/validators";
 import { generateSelfConfirmationShare } from "../services/whatsappService";
@@ -148,12 +149,22 @@ export const SuccessModal = ({ registration, onClose }) => {
               </span>
             </div>
 
-            <div className="flex items-center justify-between pt-0.5">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
               <span className="text-slate-500 flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-lavender-500" />
                 <span>സ്ഥലം</span>
               </span>
               <span className="font-bold text-slate-900">{registration.place}</span>
+            </div>
+
+            <div className="flex items-center justify-between pt-0.5">
+              <span className="text-slate-500 flex items-center gap-1.5">
+                <Baby className="w-3.5 h-3.5 text-lavender-500" />
+                <span>കൂടെയുള്ള കുട്ടികൾ</span>
+              </span>
+              <span className="font-bold text-slate-900">
+                {registration.childrenCount !== undefined ? `${registration.childrenCount} പേർ` : "ഇല്ല (0)"}
+              </span>
             </div>
           </div>
 

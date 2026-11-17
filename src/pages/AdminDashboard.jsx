@@ -13,7 +13,8 @@ import {
   X, 
   ShieldCheck, 
   Layers,
-  CheckCircle2
+  CheckCircle2,
+  Baby
 } from "lucide-react";
 import { 
   subscribeToAllRegistrations, 
@@ -81,6 +82,7 @@ export const AdminDashboard = () => {
     // Confirmed count
     const confirmedCount = registrations.filter(r => (r.status || "Confirmed") === "Confirmed").length;
     const attendedCount = registrations.filter(r => r.status === "Attended").length;
+    const totalChildren = registrations.reduce((acc, r) => acc + (Number(r.childrenCount) || 0), 0);
 
     // Today's registrations
     const now = new Date();
@@ -96,6 +98,7 @@ export const AdminDashboard = () => {
     return {
       total,
       totalPlaces,
+      totalChildren,
       confirmedCount,
       attendedCount,
       todayCount,
@@ -277,11 +280,11 @@ export const AdminDashboard = () => {
           </div>
         )}
 
-        {/* 1. Statistic Cards (Clean 4 cards without food) */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* 1. Statistic Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">
           
           {/* Total Registrations */}
-          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="bg-white p-4.5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Registered</span>
               <div className="w-8 h-8 rounded-xl bg-brand-100 text-brand-800 flex items-center justify-center">
@@ -289,13 +292,27 @@ export const AdminDashboard = () => {
               </div>
             </div>
             <div>
-              <p className="text-3xl font-black text-slate-900 tracking-tight">{stats.total}</p>
+              <p className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">{stats.total}</p>
               <p className="text-[11px] font-medium text-slate-500 mt-1">Total participants</p>
             </div>
           </div>
 
+          {/* Accompanying Children */}
+          <div className="bg-white p-4.5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Children</span>
+              <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center">
+                <Baby className="w-4 h-4" />
+              </div>
+            </div>
+            <div>
+              <p className="text-2xl sm:text-3xl font-black text-purple-600 tracking-tight">{stats.totalChildren}</p>
+              <p className="text-[11px] font-medium text-slate-500 mt-1">Accompanying children</p>
+            </div>
+          </div>
+
           {/* Unique Places */}
-          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="bg-white p-4.5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Unique Places</span>
               <div className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center">
@@ -303,13 +320,13 @@ export const AdminDashboard = () => {
               </div>
             </div>
             <div>
-              <p className="text-3xl font-black text-indigo-600 tracking-tight">{stats.totalPlaces}</p>
+              <p className="text-2xl sm:text-3xl font-black text-indigo-600 tracking-tight">{stats.totalPlaces}</p>
               <p className="text-[11px] font-medium text-slate-500 mt-1">Different localities</p>
             </div>
           </div>
 
           {/* Confirmed Seats */}
-          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="bg-white p-4.5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
             <div className="flex items-center justify-between mb-2">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Confirmed</span>
               <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
@@ -317,13 +334,13 @@ export const AdminDashboard = () => {
               </div>
             </div>
             <div>
-              <p className="text-3xl font-black text-emerald-600 tracking-tight">{stats.confirmedCount}</p>
+              <p className="text-2xl sm:text-3xl font-black text-emerald-600 tracking-tight">{stats.confirmedCount}</p>
               <p className="text-[11px] font-medium text-slate-500 mt-1">Confirmed participants</p>
             </div>
           </div>
 
           {/* Today's Registrations */}
-          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div className="bg-white p-4.5 rounded-3xl border border-slate-200 shadow-xs flex flex-col justify-between col-span-2 md:col-span-1">
             <div className="flex items-center justify-between mb-2">
               <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Today</span>
               <div className="w-8 h-8 rounded-xl bg-pink-100 text-pink-700 flex items-center justify-center">
@@ -331,7 +348,7 @@ export const AdminDashboard = () => {
               </div>
             </div>
             <div>
-              <p className="text-3xl font-black text-pink-600 tracking-tight">{stats.todayCount}</p>
+              <p className="text-2xl sm:text-3xl font-black text-pink-600 tracking-tight">{stats.todayCount}</p>
               <p className="text-[11px] font-medium text-slate-500 mt-1">Joined in last 24h</p>
             </div>
           </div>
@@ -470,6 +487,7 @@ export const AdminDashboard = () => {
                   <th className="p-4">Reg ID</th>
                   <th className="p-4">Participant & Mobile</th>
                   <th className="p-4">Place</th>
+                  <th className="p-4 text-center">Children</th>
                   <th className="p-4">Registered Date</th>
                   <th className="p-4">Status</th>
                   <th className="p-4 text-right">Actions</th>
@@ -509,6 +527,16 @@ export const AdminDashboard = () => {
 
                         <td className="p-4 font-medium text-slate-700">
                           {r.place}
+                        </td>
+
+                        <td className="p-4 text-center font-medium">
+                          {r.childrenCount ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 text-[11px] font-bold border border-purple-200">
+                              <Baby className="w-3 h-3" /> {r.childrenCount}
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 font-normal">0</span>
+                          )}
                         </td>
 
                         <td className="p-4 text-slate-500 text-[11px]">
@@ -633,6 +661,10 @@ export const AdminDashboard = () => {
                 <span className="font-bold text-slate-900">{viewParticipant.place}</span>
               </div>
               <div className="p-3 rounded-2xl bg-slate-50 flex items-center justify-between">
+                <span className="text-slate-500 font-medium">Accompanying Children</span>
+                <span className="font-bold text-purple-700">{viewParticipant.childrenCount ? `${viewParticipant.childrenCount} children` : "None (0)"}</span>
+              </div>
+              <div className="p-3 rounded-2xl bg-slate-50 flex items-center justify-between">
                 <span className="text-slate-500 font-medium">Status</span>
                 <span className="font-bold text-emerald-700">{viewParticipant.status || "Confirmed"}</span>
               </div>
@@ -681,6 +713,7 @@ export const AdminDashboard = () => {
                     fullName: editParticipant.fullName,
                     phoneNumber: editParticipant.phoneNumber,
                     place: editParticipant.place,
+                    childrenCount: Number(editParticipant.childrenCount) || 0,
                     status: editParticipant.status,
                   });
                   setEditParticipant(null);
@@ -719,6 +752,18 @@ export const AdminDashboard = () => {
                   required
                   value={editParticipant.place}
                   onChange={(e) => setEditParticipant({ ...editParticipant, place: e.target.value })}
+                  className="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-brand-600 font-medium"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Accompanying Children</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="20"
+                  value={editParticipant.childrenCount ?? 0}
+                  onChange={(e) => setEditParticipant({ ...editParticipant, childrenCount: Number(e.target.value) || 0 })}
                   className="w-full p-2.5 rounded-xl border border-slate-200 outline-none focus:border-brand-600 font-medium"
                 />
               </div>
