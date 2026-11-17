@@ -22,8 +22,8 @@ export const SuccessModal = ({ registration, onClose }) => {
   useEffect(() => {
     try {
       confetti({
-        particleCount: 70,
-        spread: 60,
+        particleCount: 75,
+        spread: 65,
         origin: { y: 0.6 },
         colors: ['#a81b3d', '#df4668', '#10b981', '#fbbf24']
       });
@@ -51,7 +51,7 @@ export const SuccessModal = ({ registration, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-fadeIn font-ml">
       <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
         
         {/* Header Ribbon */}
@@ -68,14 +68,14 @@ export const SuccessModal = ({ registration, onClose }) => {
             <CheckCircle2 className="w-7 h-7 text-white" />
           </div>
 
-          <span className="text-[10px] font-bold uppercase tracking-widest bg-white/20 px-3 py-0.5 rounded-full">
-            Confirmed
+          <span className="text-[11px] font-bold uppercase tracking-widest bg-white/20 px-3 py-0.5 rounded-full">
+            പ്രവേശനം ഉറപ്പിച്ചു
           </span>
-          <h3 className="text-xl font-bold mt-1.5">
-            Registration Successful!
+          <h3 className="text-xl sm:text-2xl font-black mt-1.5">
+            രജിസ്ട്രേഷൻ വിജയകരം!
           </h3>
-          <p className="text-emerald-100 text-xs mt-1">
-            Welcome to the Women's Conference 2026.
+          <p className="text-emerald-100 text-xs sm:text-sm mt-1">
+            വനിതാ സമ്മേളനത്തിലേക്ക് സ്വാഗതം.
           </p>
         </div>
 
@@ -86,7 +86,7 @@ export const SuccessModal = ({ registration, onClose }) => {
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                Registration ID
+                റജിസ്ട്രേഷൻ ഐഡി (ID)
               </p>
               <p className="text-xl font-black text-slate-900 tracking-tight font-mono mt-0.5">
                 {registration.registrationId}
@@ -94,46 +94,46 @@ export const SuccessModal = ({ registration, onClose }) => {
             </div>
             <button
               onClick={handleCopyId}
-              className="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
+              className="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
             >
               {copied ? (
                 <>
                   <Check className="w-3.5 h-3.5 text-emerald-600" />
-                  <span className="text-emerald-700">Copied</span>
+                  <span className="text-emerald-700">കോപ്പി ചെയ്തു</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Copy</span>
+                  <span>കോപ്പി</span>
                 </>
               )}
             </button>
           </div>
 
           {/* Conference Details Banner */}
-          <div className="p-3.5 rounded-2xl bg-rose-50/70 border border-rose-200/80 text-xs space-y-1">
+          <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-xs space-y-1">
             <p className="font-extrabold text-brand-900 text-sm">
               ഇരിട്ടി മണ്ഡലം വനിതാ സമ്മേളനം
             </p>
-            <p className="text-[11px] text-brand-700 italic font-ml">
+            <p className="text-[11px] text-brand-700 italic">
               "വിശ്വാസത്തിൽ കരുത്ത്... ആദർശത്തിൽ മാതൃക... ജീവിതത്തിൽ വിശുദ്ധി!"
             </p>
             <div className="flex items-center gap-2 text-slate-600 pt-1 text-[11px]">
               <Calendar className="w-3.5 h-3.5 text-brand-700 shrink-0" />
-              <span>Saturday, 21 November 2026 (9:30 AM – 4:00 PM)</span>
+              <span>2026 നവംബർ 21 ശനി (രാവിലെ 9:30 – വൈകിട്ട് 4:00)</span>
             </div>
             <div className="flex items-center gap-2 text-slate-600 text-[11px]">
               <MapPin className="w-3.5 h-3.5 text-brand-700 shrink-0" />
-              <span>Choice Auditorium, Nuchiyad Road, Ulikkal</span>
+              <span>ചോയ്സ് ഓഡിറ്റോറിയം, നുച്ച്യാട് റോഡ്, ഉളിക്കൽ</span>
             </div>
           </div>
 
           {/* Participant Details Summary */}
-          <div className="space-y-2 rounded-2xl border border-slate-200 p-3.5 bg-white text-xs">
+          <div className="space-y-2.5 rounded-2xl border border-slate-200 p-3.5 bg-white text-xs">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
               <span className="text-slate-500 flex items-center gap-1.5">
                 <User className="w-3.5 h-3.5 text-slate-400" />
-                <span>Participant</span>
+                <span>പങ്കെടുക്കുന്നയാൾ</span>
               </span>
               <span className="font-bold text-slate-900">{registration.fullName}</span>
             </div>
@@ -141,7 +141,7 @@ export const SuccessModal = ({ registration, onClose }) => {
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
               <span className="text-slate-500 flex items-center gap-1.5">
                 <Phone className="w-3.5 h-3.5 text-slate-400" />
-                <span>Mobile</span>
+                <span>മൊബൈൽ</span>
               </span>
               <span className="font-bold text-slate-900">
                 {formatDisplayPhone(registration.phoneNumber)}
@@ -151,7 +151,7 @@ export const SuccessModal = ({ registration, onClose }) => {
             <div className="flex items-center justify-between pt-0.5">
               <span className="text-slate-500 flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                <span>Place</span>
+                <span>സ്ഥലം</span>
               </span>
               <span className="font-bold text-slate-900">{registration.place}</span>
             </div>
@@ -164,23 +164,23 @@ export const SuccessModal = ({ registration, onClose }) => {
               className="w-full py-3 rounded-2xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
               <Share2 className="w-3.5 h-3.5" />
-              <span>Share Pass via WhatsApp</span>
+              <span>വാട്സ്ആപ്പിൽ പാസ്സ് ഷെയർ ചെയ്യുക</span>
             </button>
 
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={handlePrint}
-                className="py-2.5 px-3 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                className="py-2.5 px-3 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <Printer className="w-3.5 h-3.5 text-slate-500" />
-                <span>Print Pass</span>
+                <span>പ്രിന്റ് പാസ്സ്</span>
               </button>
 
               <button
                 onClick={onClose}
-                className="py-2.5 px-3 rounded-xl text-xs font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200 transition-colors flex items-center justify-center cursor-pointer"
+                className="py-2.5 px-3 rounded-xl text-xs font-bold text-brand-800 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-colors flex items-center justify-center cursor-pointer"
               >
-                <span>Done</span>
+                <span>പൂർത്തിയായി</span>
               </button>
             </div>
           </div>

@@ -8,7 +8,8 @@ import {
   Sparkles,
   Calendar,
   Clock,
-  ShieldCheck
+  ShieldCheck,
+  Info
 } from "lucide-react";
 import { 
   validateIndianMobile, 
@@ -17,7 +18,7 @@ import {
 } from "../utils/validators";
 import { createRegistration } from "../services/registrationService";
 
-export const RegistrationForm = ({ onSuccess }) => {
+export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
   const [formData, setFormData] = useState({
     fullName: "",
     phoneNumber: "",
@@ -32,15 +33,15 @@ export const RegistrationForm = ({ onSuccess }) => {
     switch (field) {
       case "fullName": {
         const res = validateFullName(value);
-        return res.isValid ? "" : "Please enter a valid full name (minimum 2 characters)";
+        return res.isValid ? "" : "ദയവായി പൂർണ്ണ നാമം നൽകുക (കുറഞ്ഞത് 2 അക്ഷരങ്ങൾ)";
       }
       case "phoneNumber": {
         const res = validateIndianMobile(value);
-        return res.isValid ? "" : "Please enter a valid 10-digit mobile number";
+        return res.isValid ? "" : "ശരിയായ 10 അക്ക വാട്സ്ആപ്പ് മൊബൈൽ നമ്പർ നൽകുക";
       }
       case "place": {
         const res = validatePlace(value);
-        return res.isValid ? "" : "Please enter your place name";
+        return res.isValid ? "" : "ദയവായി നിങ്ങളുടെ സ്ഥലം നൽകുക";
       }
       default:
         return "";
@@ -98,7 +99,7 @@ export const RegistrationForm = ({ onSuccess }) => {
       if (err.code === "DUPLICATE_PHONE") {
         setApiError(err.message);
       } else {
-        setApiError(err.message || "Registration failed. Please check your network connection and try again.");
+        setApiError(err.message || "രജിസ്ട്രേഷൻ സമർപ്പിക്കാൻ സാധിച്ചില്ല. ഇന്റർനെറ്റ് കണക്ഷൻ പരിശോധിക്കുക.");
       }
     } finally {
       setIsSubmitting(false);
@@ -106,37 +107,53 @@ export const RegistrationForm = ({ onSuccess }) => {
   };
 
   return (
-    <div id="register" className="max-w-xl mx-auto scroll-mt-24">
-      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-200/50 overflow-hidden transition-all">
+    <div id="register" className="w-full max-w-lg mx-auto font-ml">
+      <div className="bg-white rounded-3xl border border-rose-100 shadow-xl shadow-rose-950/5 overflow-hidden transition-all">
         
-        {/* Form Header */}
-        <div className="bg-gradient-to-r from-brand-800 via-brand-700 to-brand-600 px-6 sm:px-8 py-7 text-white relative">
-          <div className="flex items-center gap-2 mb-2">
+        {/* Form Header Banner */}
+        <div className="bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 px-6 sm:px-8 py-7 text-white relative">
+          <div className="flex items-center justify-between gap-2 mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full backdrop-blur-xs">
-              Participant Pass
+              പ്രവേശന രജിസ്ട്രേഷൻ
             </span>
-            <span className="text-[11px] font-semibold text-rose-200">
-              Free Admission
+            <span className="text-xs font-semibold text-rose-200">
+              സൗജന്യ പ്രവേശനം
             </span>
           </div>
 
-          <h3 className="text-2xl font-bold tracking-tight">
-            Register for the Conference
-          </h3>
+          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+            ഇരിട്ടി മണ്ഡലം വനിതാ സമ്മേളനം
+          </h2>
           <p className="text-rose-100 text-xs sm:text-sm mt-1 leading-relaxed">
-            Please enter your details below to confirm your seat.
+            നിങ്ങളുടെ സീറ്റ് ഉറപ്പുവരുത്താൻ താഴെ വിവരങ്ങൾ നൽകുക.
           </p>
 
-          <div className="mt-4 pt-3 border-t border-white/15 flex flex-wrap items-center gap-4 text-xs text-rose-100 font-medium">
-            <span className="flex items-center gap-1.5">
+          <div className="mt-4 pt-3 border-t border-white/15 flex flex-wrap items-center justify-between gap-2 text-xs text-rose-100">
+            <span className="flex items-center gap-1.5 font-medium">
               <Calendar className="w-3.5 h-3.5 text-rose-300" />
-              <span>Saturday, 21 November 2026</span>
+              <span>2026 നവംബർ 21 ശനി</span>
             </span>
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-1.5 font-medium">
               <Clock className="w-3.5 h-3.5 text-rose-300" />
               <span>9:30 AM – 4:00 PM</span>
             </span>
+            <span className="flex items-center gap-1.5 font-medium">
+              <MapPin className="w-3.5 h-3.5 text-rose-300" />
+              <span>ഉളിക്കൽ ചോയ്സ് ഓഡിറ്റോറിയം</span>
+            </span>
           </div>
+
+          {/* Program Details Button */}
+          {onOpenDetails && (
+            <button
+              type="button"
+              onClick={onOpenDetails}
+              className="mt-4 w-full py-2.5 px-4 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Info className="w-4 h-4 text-rose-200" />
+              <span>മുഴുവൻ പരിപാടി വിവരങ്ങളും പോസ്റ്ററും കാണുക</span>
+            </button>
+          )}
         </div>
 
         {/* Form Body */}
@@ -147,7 +164,7 @@ export const RegistrationForm = ({ onSuccess }) => {
             <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
               <div className="text-xs sm:text-sm">
-                <p className="font-bold">Notice</p>
+                <p className="font-bold">ശ്രദ്ധിക്കുക</p>
                 <p className="mt-0.5">{apiError}</p>
               </div>
             </div>
@@ -155,8 +172,8 @@ export const RegistrationForm = ({ onSuccess }) => {
 
           {/* 1. Full Name */}
           <div>
-            <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
-              Full Name <span className="text-rose-600">*</span>
+            <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-1.5">
+              പൂർണ്ണ നാമം <span className="text-rose-600">*</span>
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -166,16 +183,16 @@ export const RegistrationForm = ({ onSuccess }) => {
                 type="text"
                 value={formData.fullName}
                 onChange={(e) => handleChange("fullName", e.target.value)}
-                placeholder="Enter participant's full name"
+                placeholder="ഉദാ: ഫാത്തിമ സഹ്റ"
                 className={`w-full pl-10 pr-4 py-3 rounded-2xl border text-sm font-medium transition-all outline-none ${
                   errors.fullName 
                     ? "border-rose-300 bg-rose-50/40 focus:ring-4 focus:ring-rose-500/10" 
-                    : "border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:border-brand-600 focus:ring-4 focus:ring-brand-600/10"
+                    : "border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:border-brand-700 focus:ring-4 focus:ring-brand-700/10"
                 }`}
               />
             </div>
             {errors.fullName && (
-              <p className="mt-1.5 text-xs text-rose-600 font-medium flex items-center gap-1">
+              <p className="mt-1.5 text-xs text-rose-600 font-semibold flex items-center gap-1">
                 <AlertCircle className="w-3.5 h-3.5" />
                 <span>{errors.fullName}</span>
               </p>
@@ -185,11 +202,11 @@ export const RegistrationForm = ({ onSuccess }) => {
           {/* 2. Mobile Number */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs sm:text-sm font-semibold text-slate-700">
-                Mobile Number <span className="text-rose-600">*</span>
+              <label className="block text-xs sm:text-sm font-bold text-slate-800">
+                വാട്സ്ആപ്പ് നമ്പർ <span className="text-rose-600">*</span>
               </label>
               <span className="text-[11px] font-medium text-slate-400">
-                10-digit WhatsApp number
+                10 അക്ക മൊബൈൽ നമ്പർ
               </span>
             </div>
             <div className="relative">
@@ -208,26 +225,26 @@ export const RegistrationForm = ({ onSuccess }) => {
                 className={`w-full pl-20 pr-4 py-3 rounded-2xl border text-sm font-medium transition-all outline-none ${
                   errors.phoneNumber 
                     ? "border-rose-300 bg-rose-50/40 focus:ring-4 focus:ring-rose-500/10" 
-                    : "border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:border-brand-600 focus:ring-4 focus:ring-brand-600/10"
+                    : "border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:border-brand-700 focus:ring-4 focus:ring-brand-700/10"
                 }`}
               />
             </div>
             {errors.phoneNumber ? (
-              <p className="mt-1.5 text-xs text-rose-600 font-medium flex items-center gap-1">
+              <p className="mt-1.5 text-xs text-rose-600 font-semibold flex items-center gap-1">
                 <AlertCircle className="w-3.5 h-3.5" />
                 <span>{errors.phoneNumber}</span>
               </p>
             ) : (
               <p className="mt-1 text-[11px] text-slate-400">
-                Used to deliver your confirmation pass and event notifications. Kept strictly private.
+                കൺഫർമേഷൻ പാസ്സ് ലഭിക്കുന്നതിനായി നൽകുക. സ്വകാര്യമായി സൂക്ഷിക്കും.
               </p>
             )}
           </div>
 
           {/* 3. Place */}
           <div>
-            <label className="block text-xs sm:text-sm font-semibold text-slate-700 mb-1.5">
-              Place <span className="text-rose-600">*</span>
+            <label className="block text-xs sm:text-sm font-bold text-slate-800 mb-1.5">
+              സ്ഥലം <span className="text-rose-600">*</span>
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -237,44 +254,44 @@ export const RegistrationForm = ({ onSuccess }) => {
                 type="text"
                 value={formData.place}
                 onChange={(e) => handleChange("place", e.target.value)}
-                placeholder="e.g. Ulikkal, Iritty, Payam, Mattannur"
+                placeholder="ഉദാ: ഉളിക്കൽ, ഇരിട്ടി, പായം, നുച്ച്യാട്..."
                 className={`w-full pl-10 pr-4 py-3 rounded-2xl border text-sm font-medium transition-all outline-none ${
                   errors.place 
                     ? "border-rose-300 bg-rose-50/40 focus:ring-4 focus:ring-rose-500/10" 
-                    : "border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:border-brand-600 focus:ring-4 focus:ring-brand-600/10"
+                    : "border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:border-brand-700 focus:ring-4 focus:ring-brand-700/10"
                 }`}
               />
             </div>
             {errors.place && (
-              <p className="mt-1.5 text-xs text-rose-600 font-medium flex items-center gap-1">
+              <p className="mt-1.5 text-xs text-rose-600 font-semibold flex items-center gap-1">
                 <AlertCircle className="w-3.5 h-3.5" />
                 <span>{errors.place}</span>
               </p>
             )}
           </div>
 
-          {/* Submit CTA */}
+          {/* Submit Button */}
           <div className="pt-2">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3.5 rounded-2xl text-sm font-bold text-white bg-gradient-to-r from-brand-800 via-brand-700 to-brand-600 hover:from-brand-900 hover:to-brand-700 shadow-md shadow-brand-900/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
+              className="w-full py-4 rounded-2xl text-base font-extrabold text-white bg-gradient-to-r from-brand-900 via-brand-800 to-brand-700 hover:from-brand-950 hover:to-brand-800 shadow-lg shadow-brand-950/15 transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Submitting Registration...</span>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>രജിസ്ട്രേഷൻ സമർപ്പിക്കുന്നു...</span>
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4" />
-                  <span>Confirm Registration</span>
+                  <Sparkles className="w-5 h-5" />
+                  <span>രജിസ്റ്റർ ചെയ്യുക</span>
                 </>
               )}
             </button>
-            <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 mt-2 font-medium">
+            <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-500 mt-2 font-medium">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Instant digital pass provided upon registration</span>
+              <span>രജിസ്ട്രേഷൻ പൂർത്തിയാകുമ്പോൾ തൽക്ഷണം ഡിജിറ്റൽ പാസ്സ് ലഭിക്കും</span>
             </div>
           </div>
 
