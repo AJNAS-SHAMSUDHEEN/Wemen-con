@@ -25,7 +25,7 @@ export const SuccessModal = ({ registration, onClose }) => {
         particleCount: 75,
         spread: 65,
         origin: { y: 0.6 },
-        colors: ['#a81b3d', '#df4668', '#10b981', '#fbbf24']
+        colors: ['#8464bf', '#997ecc', '#b4a0dc', '#10b981']
       });
     } catch {
       // Confetti fallback
@@ -51,11 +51,11 @@ export const SuccessModal = ({ registration, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-fadeIn font-ml">
-      <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 sm:p-6 animate-fadeIn font-ml">
+      <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-lavender-200 overflow-hidden">
         
-        {/* Header Ribbon */}
-        <div className="bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-600 p-6 text-white text-center relative overflow-hidden">
+        {/* Header Ribbon - Elegant Lavender */}
+        <div className="bg-gradient-to-r from-lavender-700 via-lavender-600 to-lavender-500 p-6 text-white text-center relative overflow-hidden">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
@@ -74,18 +74,18 @@ export const SuccessModal = ({ registration, onClose }) => {
           <h3 className="text-xl sm:text-2xl font-black mt-1.5">
             രജിസ്ട്രേഷൻ വിജയകരം!
           </h3>
-          <p className="text-emerald-100 text-xs sm:text-sm mt-1">
+          <p className="text-lavender-100 text-xs sm:text-sm mt-1">
             വനിതാ സമ്മേളനത്തിലേക്ക് സ്വാഗതം.
           </p>
         </div>
 
         {/* Modal Printable Card Body */}
-        <div id="printable-pass" className="p-6 space-y-4">
+        <div id="printable-pass" className="p-6 space-y-4 bg-white">
           
           {/* Unique ID Highlight Box */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+          <div className="p-4 rounded-2xl bg-lavender-50/80 border border-lavender-200 flex items-center justify-between">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-lavender-700">
                 റജിസ്ട്രേഷൻ ഐഡി (ID)
               </p>
               <p className="text-xl font-black text-slate-900 tracking-tight font-mono mt-0.5">
@@ -94,7 +94,7 @@ export const SuccessModal = ({ registration, onClose }) => {
             </div>
             <button
               onClick={handleCopyId}
-              className="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
+              className="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 bg-white hover:bg-lavender-50 border border-lavender-200 shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
             >
               {copied ? (
                 <>
@@ -111,28 +111,28 @@ export const SuccessModal = ({ registration, onClose }) => {
           </div>
 
           {/* Conference Details Banner */}
-          <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-xs space-y-1">
-            <p className="font-extrabold text-brand-900 text-sm">
+          <div className="p-3.5 rounded-2xl bg-lavender-50/60 border border-lavender-200 text-xs space-y-1">
+            <p className="font-extrabold text-slate-900 text-sm">
               ഇരിട്ടി മണ്ഡലം വനിതാ സമ്മേളനം
             </p>
-            <p className="text-[11px] text-brand-700 italic">
+            <p className="text-[11px] text-lavender-800 italic">
               "വിശ്വാസത്തിൽ കരുത്ത്... ആദർശത്തിൽ മാതൃക... ജീവിതത്തിൽ വിശുദ്ധി!"
             </p>
             <div className="flex items-center gap-2 text-slate-600 pt-1 text-[11px]">
-              <Calendar className="w-3.5 h-3.5 text-brand-700 shrink-0" />
+              <Calendar className="w-3.5 h-3.5 text-lavender-700 shrink-0" />
               <span>2026 നവംബർ 21 ശനി (രാവിലെ 9:30 – വൈകിട്ട് 4:00)</span>
             </div>
             <div className="flex items-center gap-2 text-slate-600 text-[11px]">
-              <MapPin className="w-3.5 h-3.5 text-brand-700 shrink-0" />
+              <MapPin className="w-3.5 h-3.5 text-lavender-700 shrink-0" />
               <span>ചോയ്സ് ഓഡിറ്റോറിയം, നുച്ച്യാട് റോഡ്, ഉളിക്കൽ</span>
             </div>
           </div>
 
           {/* Participant Details Summary */}
-          <div className="space-y-2.5 rounded-2xl border border-slate-200 p-3.5 bg-white text-xs">
+          <div className="space-y-2.5 rounded-2xl border border-lavender-200 p-3.5 bg-white text-xs">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
               <span className="text-slate-500 flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5 text-slate-400" />
+                <User className="w-3.5 h-3.5 text-lavender-500" />
                 <span>പങ്കെടുക്കുന്നയാൾ</span>
               </span>
               <span className="font-bold text-slate-900">{registration.fullName}</span>
@@ -140,7 +140,7 @@ export const SuccessModal = ({ registration, onClose }) => {
 
             <div className="flex items-center justify-between border-b border-slate-100 pb-2">
               <span className="text-slate-500 flex items-center gap-1.5">
-                <Phone className="w-3.5 h-3.5 text-slate-400" />
+                <Phone className="w-3.5 h-3.5 text-lavender-500" />
                 <span>മൊബൈൽ</span>
               </span>
               <span className="font-bold text-slate-900">
@@ -150,7 +150,7 @@ export const SuccessModal = ({ registration, onClose }) => {
 
             <div className="flex items-center justify-between pt-0.5">
               <span className="text-slate-500 flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                <MapPin className="w-3.5 h-3.5 text-lavender-500" />
                 <span>സ്ഥലം</span>
               </span>
               <span className="font-bold text-slate-900">{registration.place}</span>
@@ -170,7 +170,7 @@ export const SuccessModal = ({ registration, onClose }) => {
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={handlePrint}
-                className="py-2.5 px-3 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                className="py-2.5 px-3 rounded-xl text-xs font-bold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <Printer className="w-3.5 h-3.5 text-slate-500" />
                 <span>പ്രിന്റ് പാസ്സ്</span>
@@ -178,7 +178,7 @@ export const SuccessModal = ({ registration, onClose }) => {
 
               <button
                 onClick={onClose}
-                className="py-2.5 px-3 rounded-xl text-xs font-bold text-brand-800 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-colors flex items-center justify-center cursor-pointer"
+                className="py-2.5 px-3 rounded-xl text-xs font-bold text-lavender-900 bg-lavender-100 hover:bg-lavender-200 border border-lavender-300 transition-colors flex items-center justify-center cursor-pointer"
               >
                 <span>പൂർത്തിയായി</span>
               </button>

@@ -11,15 +11,15 @@ function AppContent() {
   const { currentUser } = useAuth();
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#fdfaf7] text-slate-900 font-sans">
-      {/* Top Header Navbar */}
+    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans">
+      {/* Top Minimal Header Navbar */}
       <Navbar
         currentView={currentView}
         setCurrentView={setCurrentView}
         onOpenDetails={() => setIsDetailsOpen(true)}
       />
 
-      {/* Main View: Only Registration Form vs Admin Dashboard */}
+      {/* Main View: Public Registration Form vs Admin Portal */}
       <div className="flex-1">
         {currentView === "home" ? (
           <HomePage

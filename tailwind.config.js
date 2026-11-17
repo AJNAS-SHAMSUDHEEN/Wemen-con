@@ -7,18 +7,33 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Soft & elegant lavender palette
+        lavender: {
+          50: '#f8f7fc',
+          100: '#f0edf8',
+          200: '#e3dcf2',
+          300: '#cfc2e9',
+          400: '#b4a0dc',
+          500: '#997ecc',
+          600: '#8464bf',
+          700: '#7252ae',
+          800: '#5e4192',
+          900: '#4d3578',
+          950: '#2b1b46',
+        },
+        // Alias brand to lavender to unify theme across all components
         brand: {
-          50: '#fdf2f4',
-          100: '#fce7ea',
-          200: '#f9d2d9',
-          300: '#f4aab8',
-          400: '#ec768e',
-          500: '#df4668',
-          600: '#c8264d',
-          700: '#a81b3d',
-          800: '#8c1936',
-          900: '#751931',
-          950: '#420917',
+          50: '#f8f7fc',
+          100: '#f0edf8',
+          200: '#e3dcf2',
+          300: '#cfc2e9',
+          400: '#b4a0dc',
+          500: '#997ecc',
+          600: '#8464bf',
+          700: '#7252ae',
+          800: '#5e4192',
+          900: '#4d3578',
+          950: '#2b1b46',
         },
       },
       fontFamily: {
