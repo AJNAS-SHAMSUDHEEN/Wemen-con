@@ -78,6 +78,7 @@ export const openWhatsApp = (phone, text) => {
  * Generate a shareable WhatsApp text for participant confirmation
  */
 export const generateSelfConfirmationShare = (registration) => {
+  const childrenText = Number(registration.childrenCount) > 0 ? `\n• *കൂടെയുള്ള കുട്ടികൾ:* ${registration.childrenCount}` : "";
   return `✨ *വിസ്ഡം വിമൻ വനിതാ സമ്മേളനം - ഇരിട്ടി മണ്ഡലം* ✨
 "വിശ്വാസത്തിൽ കരുത്ത്... ആദർശത്തിൽ മാതൃക... ജീവിതത്തിൽ വിശുദ്ധി!"
 
@@ -85,7 +86,7 @@ export const generateSelfConfirmationShare = (registration) => {
 
 • *Reg ID:* ${registration.registrationId}
 • *പേര്:* ${registration.fullName}
-• *സ്ഥലം:* ${registration.place}
+• *സ്ഥലം:* ${registration.place}${childrenText}
 • *തീയതി:* 2026 നവംബർ 21 ശനി (രാവിലെ 9:30 - വൈകിട്ട് 4:00)
 • *വേദി:* ചോയ്സ് ഓഡിറ്റോറിയം, നുച്ച്യാട് റോഡ്, ഉളിക്കൽ
 

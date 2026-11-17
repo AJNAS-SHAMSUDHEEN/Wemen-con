@@ -70,12 +70,14 @@ export const createRegistration = async ({
   const registrationId = generateRegistrationId();
   const docRef = doc(db, REGISTRATIONS_COLLECTION, registrationId);
 
+  const parsedChildren = Math.max(0, parseInt(childrenCount, 10) || 0);
+
   const payload = {
     registrationId,
     fullName: fullName.trim(),
     phoneNumber: cleanPhone,
     place: place.trim(),
-    childrenCount: Number(childrenCount) || 0,
+    childrenCount: parsedChildren,
     preferredTime: "9:30 AM - 4:00 PM",
     conferenceName: "Wisdom Women Conference — Iritty Mandalam",
     eventDate: "2026 November 21, Saturday",
