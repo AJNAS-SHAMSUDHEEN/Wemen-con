@@ -32,6 +32,11 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
 
   const [hasTeenspace, setHasTeenspace] = useState(false);
   const [teenspaceStudents, setTeenspaceStudents] = useState([]);
+  const [studentInput, setStudentInput] = useState({
+    name: "",
+    classGrade: "10",
+  });
+  const [studentError, setStudentError] = useState("");
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,24 +45,24 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
   const handleToggleTeenspace = (e) => {
     const checked = e.target.checked;
     setHasTeenspace(checked);
-    if (checked && teenspaceStudents.length === 0) {
-      setTeenspaceStudents([{ id: Date.now(), name: "", classGrade: "10" }]);
-    }
+    setStudentError("");
   };
 
   const handleAddStudent = () => {
+    if (!studentInput.name || !studentInput.name.trim()) {
+      setStudentError("ദയവായി വിദ്യാർത്ഥിയുടെ പേര് നൽകുക");
+      return;
+    }
+    setStudentError("");
     setTeenspaceStudents(prev => [
       ...prev,
-      { id: Date.now() + Math.random(), name: "", classGrade: "10" }
+      {
+        id: Date.now() + Math.random(),
+        name: studentInput.name.trim(),
+        classGrade: studentInput.classGrade || "10",
+      }
     ]);
-  };
-
-  const handleUpdateStudent = (index, field, value) => {
-    setTeenspaceStudents(prev => {
-      const updated = [...prev];
-      updated[index] = { ...updated[index], [field]: value };
-      return updated;
-    });
+    setStudentInput({ name: "", classGrade: "10" });
   };
 
   const handleRemoveStudent = (index) => {
@@ -109,21 +114,26 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
       return;
     }
 
-    if (hasTeenspace && teenspaceStudents.length > 0) {
-      const hasEmptyName = teenspaceStudents.some((s) => !s.name || !s.name.trim());
-      if (hasEmptyName) {
-        setApiError("ദയവായി ചേർത്ത വിദ്യാർത്ഥിയുടെ പേര് നൽകുക അല്ലെങ്കിൽ ആ വരി ഒഴിവാക്കുക.");
-        return;
-      }
+    // Gather all students: existing list + currently typed in input (if any)
+    let finalStudents = [...teenspaceStudents];
+    if (hasTeenspace && studentInput.name && studentInput.name.trim()) {
+      finalStudents.push({
+        id: Date.now(),
+        name: studentInput.name.trim(),
+        classGrade: studentInput.classGrade || "10",
+      });
+    }
+
+    if (hasTeenspace && finalStudents.length === 0) {
+      setApiError("ടീൻസ്പേസിൽ വിദ്യാർത്ഥിയുടെ പേര് നൽകി ചേർക്കുക (Add ചെയ്യുക) അല്ലെങ്കിൽ ടിക്ക് ഒഴിവാക്കുക.");
+      return;
     }
 
     setIsSubmitting(true);
 
     try {
       const validTeenspaceStudents = hasTeenspace
-        ? teenspaceStudents
-            .filter((s) => s && s.name && s.name.trim())
-            .map((s) => ({ name: s.name.trim(), classGrade: s.classGrade || "10" }))
+        ? finalStudents.map((s) => ({ name: s.name.trim(), classGrade: s.classGrade || "10" }))
         : [];
 
       const newRegistration = await createRegistration({
@@ -144,6 +154,8 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
       });
       setHasTeenspace(false);
       setTeenspaceStudents([]);
+      setStudentInput({ name: "", classGrade: "10" });
+      setStudentError("");
       setErrors({});
 
       if (onSuccess) {
@@ -437,106 +449,133 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
               </div>
             </label>
 
-            {/* If Teenspace is checked: Show student list & Add button */}
+            {/* If Teenspace is checked: Input form to enter & Add student */}
             {hasTeenspace && (
-              <div className="mt-4 pt-4 border-t border-lavender-200/80 space-y-3 animate-fadeIn">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-lavender-950 flex items-center gap-1.5">
-                    <span>വിദ്യാർത്ഥികളുടെ വിവരങ്ങൾ</span>
-                    {teenspaceStudents.length > 0 && (
-                      <span className="text-[11px] font-semibold text-lavender-700 bg-lavender-100 px-2 py-0.5 rounded-full">
-                        {teenspaceStudents.length} പേർ
-                      </span>
-                    )}
-                  </span>
+              <div className="mt-4 pt-4 border-t border-lavender-200/80 space-y-3.5 animate-fadeIn">
+                
+                {/* Form to enter student & click Add */}
+                <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-lavender-300 shadow-2xs space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-800">
+                      വിദ്യാർത്ഥിയുടെ വിവരങ്ങൾ നൽകുക
+                    </span>
+                    <span className="text-[10px] font-semibold text-lavender-700 bg-lavender-100 px-2 py-0.5 rounded-full">
+                      Teenspace
+                    </span>
+                  </div>
 
-                  <button
-                    type="button"
-                    onClick={handleAddStudent}
-                    className="py-1.5 px-3 rounded-xl bg-lavender-600 hover:bg-lavender-700 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>+ Add Student</span>
-                  </button>
-                </div>
-
-                {/* Students Cards List */}
-                <div className="space-y-2.5">
-                  {teenspaceStudents.map((student, idx) => (
-                    <div 
-                      key={student.id || idx}
-                      className="p-3 sm:p-3.5 rounded-xl bg-white border border-lavender-300 shadow-2xs space-y-2 relative"
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-[11px] font-extrabold text-lavender-800 bg-lavender-100 px-2 py-0.5 rounded-md">
-                          വിദ്യാർത്ഥി #{idx + 1}
-                        </span>
-
-                        {/* Remove / Close Button */}
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveStudent(idx)}
-                          className="p-1 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer border border-transparent hover:border-rose-200"
-                          title="വിദ്യാർത്ഥിയെ ഒഴിവാക്കുക"
-                          aria-label="Remove student"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
-                        {/* Student Name */}
-                        <div className="sm:col-span-7">
-                          <input
-                            type="text"
-                            value={student.name}
-                            onChange={(e) => handleUpdateStudent(idx, "name", e.target.value)}
-                            placeholder="വിദ്യാർത്ഥിയുടെ പേര്"
-                            className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-200 focus:border-lavender-600 focus:ring-2 focus:ring-lavender-500/15 outline-none font-medium bg-slate-50/50 hover:bg-white focus:bg-white"
-                          />
-                        </div>
-
-                        {/* Class Grade (10, +1, +2) */}
-                        <div className="sm:col-span-5 flex items-center gap-1">
-                          <span className="text-[11px] font-bold text-slate-500 mr-1 shrink-0">ക്ലാസ്സ്:</span>
-                          {["10", "+1", "+2"].map((cls) => {
-                            const isSelected = student.classGrade === cls;
-                            return (
-                              <button
-                                key={cls}
-                                type="button"
-                                onClick={() => handleUpdateStudent(idx, "classGrade", cls)}
-                                className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                                  isSelected
-                                    ? "bg-lavender-600 text-white shadow-xs"
-                                    : "bg-lavender-50 hover:bg-lavender-100 text-lavender-900 border border-lavender-200"
-                                }`}
-                              >
-                                {cls}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
+                  <div className="space-y-2.5">
+                    {/* Student Name Input */}
+                    <div>
+                      <input
+                        type="text"
+                        value={studentInput.name}
+                        onChange={(e) => {
+                          setStudentInput((prev) => ({ ...prev, name: e.target.value }));
+                          if (studentError) setStudentError("");
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleAddStudent();
+                          }
+                        }}
+                        placeholder="വിദ്യാർത്ഥിയുടെ പൂർണ്ണ നാമം"
+                        className={`w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border outline-none font-medium transition-all ${
+                          studentError
+                            ? "border-rose-400 bg-rose-50/40 focus:ring-2 focus:ring-rose-500/20"
+                            : "border-slate-200 bg-slate-50/50 hover:bg-white focus:bg-white focus:border-lavender-600 focus:ring-2 focus:ring-lavender-500/15"
+                        }`}
+                      />
+                      {studentError && (
+                        <p className="mt-1 text-xs text-rose-600 font-semibold flex items-center gap-1">
+                          <AlertCircle className="w-3.5 h-3.5" />
+                          <span>{studentError}</span>
+                        </p>
+                      )}
                     </div>
-                  ))}
 
-                  {teenspaceStudents.length === 0 && (
-                    <div className="text-center py-4 px-3 rounded-xl border border-dashed border-lavender-300 bg-lavender-50/50">
-                      <p className="text-xs text-lavender-800 font-medium mb-2">
-                        വിദ്യാർത്ഥികളെ ചേർക്കാൻ താഴെ ക്ലിക്ക് ചെയ്യുക
-                      </p>
+                    {/* Class Selector & Add Button */}
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pt-0.5">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-bold text-slate-600 mr-1 shrink-0">ക്ലാസ്സ്:</span>
+                        {["10", "+1", "+2"].map((cls) => {
+                          const isSelected = studentInput.classGrade === cls;
+                          return (
+                            <button
+                              key={cls}
+                              type="button"
+                              onClick={() => setStudentInput((prev) => ({ ...prev, classGrade: cls }))}
+                              className={`py-1.5 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                                isSelected
+                                  ? "bg-lavender-600 text-white shadow-xs"
+                                  : "bg-lavender-50 hover:bg-lavender-100 text-lavender-900 border border-lavender-200"
+                              }`}
+                            >
+                              {cls}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Add Student Button */}
                       <button
                         type="button"
                         onClick={handleAddStudent}
-                        className="py-1.5 px-4 rounded-xl bg-lavender-600 text-white font-bold text-xs inline-flex items-center gap-1.5 cursor-pointer shadow-xs"
+                        className="py-2 px-4 rounded-xl bg-lavender-600 hover:bg-lavender-700 active:scale-[0.98] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer"
                       >
-                        <Plus className="w-3.5 h-3.5" />
-                        <span>+ Add Student</span>
+                        <Plus className="w-4 h-4" />
+                        <span>Add Student</span>
                       </button>
                     </div>
-                  )}
+                  </div>
                 </div>
+
+                {/* Added Students List with Close (✕) Button */}
+                {teenspaceStudents.length > 0 && (
+                  <div className="space-y-2 pt-1">
+                    <div className="flex items-center justify-between px-1">
+                      <span className="text-[11px] font-extrabold uppercase tracking-wider text-lavender-900">
+                        ചേർത്ത വിദ്യാർത്ഥികൾ ({teenspaceStudents.length} പേർ)
+                      </span>
+                    </div>
+
+                    <div className="space-y-2">
+                      {teenspaceStudents.map((student, idx) => (
+                        <div
+                          key={student.id || idx}
+                          className="p-3 rounded-xl bg-white border border-lavender-200 shadow-2xs flex items-center justify-between gap-3 animate-fadeIn"
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <span className="w-6 h-6 rounded-full bg-lavender-100 text-lavender-900 text-xs font-extrabold flex items-center justify-center shrink-0">
+                              {idx + 1}
+                            </span>
+                            <div>
+                              <p className="font-bold text-xs sm:text-sm text-slate-900">
+                                {student.name}
+                              </p>
+                              <span className="inline-block text-[10px] font-bold text-lavender-800 bg-lavender-50 px-1.5 py-0.2 rounded border border-lavender-200 mt-0.5">
+                                ക്ലാസ്സ്: {student.classGrade}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Close button to remove added student */}
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveStudent(idx)}
+                            className="p-1.5 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-colors cursor-pointer"
+                            title="വിദ്യാർത്ഥിയെ ഒഴിവാക്കുക"
+                            aria-label="Remove student"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
               </div>
             )}
           </div>

@@ -5,18 +5,15 @@ import {
   Mail, 
   AlertCircle, 
   Loader2, 
-  UserPlus, 
   LogIn,
   ArrowLeft
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 export const AdminLogin = ({ onBackToHome }) => {
-  const { login, registerAdmin, authError, setAuthError } = useAuth();
-  const [isRegisterMode, setIsRegisterMode] = useState(false);
+  const { login, authError, setAuthError } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("Conference Admin");
   const [loading, setLoading] = useState(false);
   const [localError, setLocalError] = useState("");
 
@@ -38,11 +35,7 @@ export const AdminLogin = ({ onBackToHome }) => {
     setLoading(true);
 
     try {
-      if (isRegisterMode) {
-        await registerAdmin(email, password, displayName);
-      } else {
-        await login(email, password);
-      }
+      await login(email, password);
     } catch (err) {
       setLocalError(err.message || "Authentication failed.");
     } finally {
@@ -69,12 +62,10 @@ export const AdminLogin = ({ onBackToHome }) => {
             <ShieldCheck className="w-6 h-6" />
           </div>
           <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-            {isRegisterMode ? "Create Admin Account" : "Admin Portal"}
+            Admin Portal
           </h2>
           <p className="text-xs text-slate-500 mt-1">
-            {isRegisterMode
-              ? "Set up initial administrator credentials for this project"
-              : "Secure access restricted to authorized administrators"}
+            Secure access restricted to authorized administrators
           </p>
         </div>
 
@@ -88,22 +79,6 @@ export const AdminLogin = ({ onBackToHome }) => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          
-          {isRegisterMode && (
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
-                Admin Name
-              </label>
-              <input
-                type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="e.g. Lead Organizer"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-medium focus:bg-white focus:border-brand-600 outline-none"
-              />
-            </div>
-          )}
-
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
               Email Address
@@ -151,11 +126,6 @@ export const AdminLogin = ({ onBackToHome }) => {
                 <Loader2 className="w-4 h-4 animate-spin" />
                 <span>Authenticating with Firebase...</span>
               </>
-            ) : isRegisterMode ? (
-              <>
-                <UserPlus className="w-4 h-4" />
-                <span>Create Admin & Sign In</span>
-              </>
             ) : (
               <>
                 <LogIn className="w-4 h-4" />
@@ -164,23 +134,6 @@ export const AdminLogin = ({ onBackToHome }) => {
             )}
           </button>
         </form>
-
-        {/* Toggle Mode */}
-        <div className="mt-5 pt-4 border-t border-slate-100 text-center">
-          <button
-            type="button"
-            onClick={() => {
-              setIsRegisterMode(!isRegisterMode);
-              setLocalError("");
-              setAuthError("");
-            }}
-            className="text-xs font-semibold text-brand-700 hover:text-brand-900 transition-colors cursor-pointer"
-          >
-            {isRegisterMode 
-              ? "Already have an admin account? Sign in" 
-              : "First time setup? Create initial admin account"}
-          </button>
-        </div>
 
       </div>
     </div>

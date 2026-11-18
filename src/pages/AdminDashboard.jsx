@@ -49,6 +49,7 @@ export const AdminDashboard = () => {
   const [viewParticipant, setViewParticipant] = useState(null);
   const [editParticipant, setEditParticipant] = useState(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [teenspaceModalParticipant, setTeenspaceModalParticipant] = useState(null);
 
   // WhatsApp modal state
   const [whatsAppModalOpen, setWhatsAppModalOpen] = useState(false);
@@ -526,11 +527,16 @@ export const AdminDashboard = () => {
                             {formatDisplayPhone(r.phoneNumber)}
                           </p>
                           {Array.isArray(r.teenspaceStudents) && r.teenspaceStudents.length > 0 && (
-                            <div className="mt-1 flex items-center gap-1 flex-wrap">
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-800 text-[10px] font-bold border border-indigo-200">
-                                <GraduationCap className="w-3 h-3 text-indigo-600" />
-                                <span>Teenspace: {r.teenspaceStudents.length} ({r.teenspaceStudents.map(s => `${s.name} - ${s.classGrade}`).join(", ")})</span>
-                              </span>
+                            <div className="mt-1.5">
+                              <button
+                                type="button"
+                                onClick={() => setTeenspaceModalParticipant(r)}
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 hover:text-indigo-900 text-xs font-bold border border-indigo-200 shadow-2xs transition-colors cursor-pointer"
+                                title="Click to view Teenspace students"
+                              >
+                                <GraduationCap className="w-3.5 h-3.5 text-indigo-600" />
+                                <span>Teenspace Students ({r.teenspaceStudents.length})</span>
+                              </button>
                             </div>
                           )}
                         </td>
@@ -843,6 +849,104 @@ export const AdminDashboard = () => {
                 Delete
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Teenspace Students Popup Modal */}
+      {teenspaceModalParticipant && (
+        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn font-ml">
+          <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-indigo-100 overflow-hidden space-y-0">
+            
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-indigo-800 p-5 text-white flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0">
+                  <GraduationCap className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-base leading-tight">
+                    Teenspace Students
+                  </h3>
+                  <p className="text-xs text-indigo-200 mt-0.5">
+                    ടീൻസ്പേസ് വിദ്യാർത്ഥികൾ ({teenspaceModalParticipant.teenspaceStudents?.length || 0} പേർ)
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setTeenspaceModalParticipant(null)}
+                className="p-1.5 rounded-full hover:bg-white/20 text-white transition-colors cursor-pointer"
+                aria-label="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-5 sm:p-6 space-y-4 bg-white">
+              
+              {/* Participant Info Banner */}
+              <div className="p-3 rounded-2xl bg-indigo-50/70 border border-indigo-200/80 flex items-center justify-between text-xs">
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                    രജിസ്റ്റർ ചെയ്തയാൾ
+                  </span>
+                  <p className="font-extrabold text-slate-900 text-sm mt-0.5">
+                    {teenspaceModalParticipant.fullName}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                    മൊബൈൽ നമ്പർ
+                  </span>
+                  <p className="font-bold text-indigo-900 text-xs font-mono mt-0.5">
+                    {formatDisplayPhone(teenspaceModalParticipant.phoneNumber)}
+                  </p>
+                </div>
+              </div>
+
+              {/* Students List */}
+              <div className="space-y-2.5 max-h-72 overflow-y-auto pr-1">
+                {teenspaceModalParticipant.teenspaceStudents?.map((student, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3 shadow-2xs hover:border-indigo-200 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-900 text-xs font-black flex items-center justify-center shrink-0">
+                        {idx + 1}
+                      </span>
+                      <div>
+                        <p className="font-bold text-sm text-slate-900">
+                          {student.name}
+                        </p>
+                        <p className="text-[11px] text-slate-500 font-medium">
+                          വിദ്യാർത്ഥി #{idx + 1}
+                        </p>
+                      </div>
+                    </div>
+
+                    <span className="px-3 py-1 rounded-xl bg-indigo-100 text-indigo-900 text-xs font-black border border-indigo-200 shrink-0">
+                      Class {student.classGrade}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Close Button */}
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => setTeenspaceModalParticipant(null)}
+                  className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-colors cursor-pointer"
+                >
+                  Close (അടയ്ക്കുക)
+                </button>
+              </div>
+
+            </div>
+
           </div>
         </div>
       )}
