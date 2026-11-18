@@ -12,7 +12,8 @@ import {
   Clock,
   Phone,
   User,
-  Baby
+  Baby,
+  GraduationCap
 } from "lucide-react";
 import { formatDisplayPhone } from "../utils/validators";
 import { generateSelfConfirmationShare } from "../services/whatsappService";
@@ -166,6 +167,30 @@ export const SuccessModal = ({ registration, onClose }) => {
                 <span className="font-extrabold text-lavender-900 bg-lavender-100 px-2 py-0.5 rounded-md text-[11px]">
                   {registration.childrenCount} പേർ
                 </span>
+              </div>
+            )}
+
+            {Array.isArray(registration.teenspaceStudents) && registration.teenspaceStudents.length > 0 && (
+              <div className="border-t border-slate-100 pt-2 space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500 flex items-center gap-1.5">
+                    <GraduationCap className="w-3.5 h-3.5 text-lavender-600" />
+                    <span>Teenspace വിദ്യാർത്ഥികൾ</span>
+                  </span>
+                  <span className="font-extrabold text-lavender-900 bg-lavender-100 px-2 py-0.5 rounded-md text-[11px]">
+                    {registration.teenspaceStudents.length} പേർ
+                  </span>
+                </div>
+                <div className="pl-5 space-y-1">
+                  {registration.teenspaceStudents.map((st, idx) => (
+                    <p key={idx} className="text-[11px] font-medium text-slate-700 flex items-center justify-between">
+                      <span>• {st.name}</span>
+                      <span className="text-lavender-800 font-bold bg-lavender-50 px-1.5 py-0.2 rounded border border-lavender-200">
+                        Class {st.classGrade}
+                      </span>
+                    </p>
+                  ))}
+                </div>
               </div>
             )}
           </div>

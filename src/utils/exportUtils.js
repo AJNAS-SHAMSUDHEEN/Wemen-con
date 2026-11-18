@@ -15,21 +15,29 @@ export const exportToCSV = (registrations, filename = "womens_conference_registr
     "Phone Number",
     "Place",
     "Children Count",
+    "Teenspace Students",
     "Status",
     "Registration Date",
     "Notes"
   ];
 
-  const rows = registrations.map((r) => [
-    `"${r.registrationId || ""}"`,
-    `"${(r.fullName || "").replace(/"/g, '""')}"`,
-    `"${r.phoneNumber || ""}"`,
-    `"${(r.place || "").replace(/"/g, '""')}"`,
-    `"${r.childrenCount ?? 0}"`,
-    `"${r.status || "Confirmed"}"`,
-    `"${formatDateTime(r.registrationDate)}"`,
-    `"${(r.notes || "").replace(/"/g, '""')}"`
-  ]);
+  const rows = registrations.map((r) => {
+    const teenspaceFormatted = Array.isArray(r.teenspaceStudents) && r.teenspaceStudents.length > 0
+      ? r.teenspaceStudents.map(s => `${s.name} (${s.classGrade})`).join("; ")
+      : "None";
+
+    return [
+      `"${r.registrationId || ""}"`,
+      `"${(r.fullName || "").replace(/"/g, '""')}"`,
+      `"${r.phoneNumber || ""}"`,
+      `"${(r.place || "").replace(/"/g, '""')}"`,
+      `"${r.childrenCount ?? 0}"`,
+      `"${teenspaceFormatted.replace(/"/g, '""')}"`,
+      `"${r.status || "Registered"}"`,
+      `"${formatDateTime(r.registrationDate)}"`,
+      `"${(r.notes || "").replace(/"/g, '""')}"`
+    ];
+  });
 
   const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(row => row.join(","))].join("\r\n");
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });

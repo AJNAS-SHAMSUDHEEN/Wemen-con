@@ -15,7 +15,8 @@ import {
   Layers,
   CheckCircle2,
   Baby,
-  PhoneCall
+  PhoneCall,
+  GraduationCap
 } from "lucide-react";
 import {
   subscribeToAllRegistrations,
@@ -98,10 +99,13 @@ export const AdminDashboard = () => {
 
     // Total children accompanying
     const totalChildren = registrations.reduce((sum, r) => sum + (Number(r.childrenCount) || 0), 0);
+    // Total Teenspace students
+    const totalTeenspace = registrations.reduce((sum, r) => sum + (Array.isArray(r.teenspaceStudents) ? r.teenspaceStudents.length : 0), 0);
 
     return {
       total,
       totalChildren,
+      totalTeenspace,
       totalPlaces,
       registeredCount,
       confirmedCount,
@@ -521,6 +525,14 @@ export const AdminDashboard = () => {
                           <p className="text-[11px] font-medium text-slate-500 mt-0.5">
                             {formatDisplayPhone(r.phoneNumber)}
                           </p>
+                          {Array.isArray(r.teenspaceStudents) && r.teenspaceStudents.length > 0 && (
+                            <div className="mt-1 flex items-center gap-1 flex-wrap">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-800 text-[10px] font-bold border border-indigo-200">
+                                <GraduationCap className="w-3 h-3 text-indigo-600" />
+                                <span>Teenspace: {r.teenspaceStudents.length} ({r.teenspaceStudents.map(s => `${s.name} - ${s.classGrade}`).join(", ")})</span>
+                              </span>
+                            </div>
+                          )}
                         </td>
 
                         <td className="p-4 font-medium text-slate-700">

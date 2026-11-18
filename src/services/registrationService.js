@@ -53,6 +53,8 @@ export const createRegistration = async ({
   phoneNumber,
   place,
   childrenCount = 0,
+  hasTeenspace = false,
+  teenspaceStudents = [],
 }) => {
   const cleanPhone = formatToStandard10Digit(phoneNumber);
 
@@ -72,12 +74,23 @@ export const createRegistration = async ({
 
   const parsedChildren = Math.max(0, parseInt(childrenCount, 10) || 0);
 
+  const sanitizedTeenspaceStudents = Array.isArray(teenspaceStudents)
+    ? teenspaceStudents
+        .filter((s) => s && s.name && s.name.trim())
+        .map((s) => ({
+          name: s.name.trim(),
+          classGrade: s.classGrade || "10",
+        }))
+    : [];
+
   const payload = {
     registrationId,
     fullName: fullName.trim(),
     phoneNumber: cleanPhone,
     place: place.trim(),
     childrenCount: parsedChildren,
+    hasTeenspace: Boolean(hasTeenspace && sanitizedTeenspaceStudents.length > 0),
+    teenspaceStudents: sanitizedTeenspaceStudents,
     preferredTime: "9:30 AM - 4:00 PM",
     conferenceName: "Wisdom Women Conference — Iritty Mandalam",
     eventDate: "2026 November 21, Saturday",

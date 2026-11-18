@@ -10,7 +10,10 @@ import {
   Clock,
   ShieldCheck,
   Info,
-  Baby
+  Baby,
+  GraduationCap,
+  Plus,
+  X
 } from "lucide-react";
 import {
   validateIndianMobile,
@@ -27,9 +30,39 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
     childrenCount: 0,
   });
 
+  const [hasTeenspace, setHasTeenspace] = useState(false);
+  const [teenspaceStudents, setTeenspaceStudents] = useState([]);
+
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [apiError, setApiError] = useState("");
+
+  const handleToggleTeenspace = (e) => {
+    const checked = e.target.checked;
+    setHasTeenspace(checked);
+    if (checked && teenspaceStudents.length === 0) {
+      setTeenspaceStudents([{ id: Date.now(), name: "", classGrade: "10" }]);
+    }
+  };
+
+  const handleAddStudent = () => {
+    setTeenspaceStudents(prev => [
+      ...prev,
+      { id: Date.now() + Math.random(), name: "", classGrade: "10" }
+    ]);
+  };
+
+  const handleUpdateStudent = (index, field, value) => {
+    setTeenspaceStudents(prev => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
+  };
+
+  const handleRemoveStudent = (index) => {
+    setTeenspaceStudents(prev => prev.filter((_, i) => i !== index));
+  };
 
   const validateField = (field, value) => {
     switch (field) {
@@ -76,14 +109,30 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
       return;
     }
 
+    if (hasTeenspace && teenspaceStudents.length > 0) {
+      const hasEmptyName = teenspaceStudents.some((s) => !s.name || !s.name.trim());
+      if (hasEmptyName) {
+        setApiError("ദയവായി ചേർത്ത വിദ്യാർത്ഥിയുടെ പേര് നൽകുക അല്ലെങ്കിൽ ആ വരി ഒഴിവാക്കുക.");
+        return;
+      }
+    }
+
     setIsSubmitting(true);
 
     try {
+      const validTeenspaceStudents = hasTeenspace
+        ? teenspaceStudents
+            .filter((s) => s && s.name && s.name.trim())
+            .map((s) => ({ name: s.name.trim(), classGrade: s.classGrade || "10" }))
+        : [];
+
       const newRegistration = await createRegistration({
         fullName: formData.fullName,
         phoneNumber: formData.phoneNumber,
         place: formData.place,
         childrenCount: formData.childrenCount,
+        hasTeenspace: Boolean(hasTeenspace && validTeenspaceStudents.length > 0),
+        teenspaceStudents: validTeenspaceStudents,
       });
 
       // Clear form on success
@@ -93,6 +142,8 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
         place: "",
         childrenCount: 0,
       });
+      setHasTeenspace(false);
+      setTeenspaceStudents([]);
       setErrors({});
 
       if (onSuccess) {
@@ -286,19 +337,19 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
             )}
           </div>
 
-          {/* 4. Number of Children Accompanying (കൂടെയുള്ള കുട്ടികളുടെ എണ്ണം) */}
+          {/* 4. Number of Children Accompanying (കൂടെയുള്ള കുട്ടികൾ) */}
           <div className="p-4 sm:p-4.5 rounded-2xl bg-white border border-lavender-200/90 space-y-2.5 transition-all shadow-2xs hover:border-lavender-300">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <Baby className="w-4 h-4 text-lavender-700" />
-                <label className="block text-xs sm:text-sm font-bold text-slate-800">
-                  കൂടെയുള്ള കുട്ടികളുടെ എണ്ണം
+            <div className="flex flex-wrap items-center justify-between gap-1.5">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <Baby className="w-4 h-4 text-lavender-700 shrink-0" />
+                <label className="text-xs sm:text-sm font-bold text-slate-800">
+                  കൂടെയുള്ള കുട്ടികൾ
                 </label>
-                <span className="text-[10px] font-medium text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-medium text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full shrink-0">
                   ഓപ്ഷണൽ
                 </span>
               </div>
-              <span className="text-[11px] font-bold text-lavender-700 bg-lavender-50 px-2 py-0.5 rounded-md border border-lavender-200/60">
+              <span className="text-[11px] font-bold text-lavender-700 bg-lavender-50 px-2 py-0.5 rounded-md border border-lavender-200/60 shrink-0">
                 {Number(formData.childrenCount) > 0
                   ? `${formData.childrenCount} കുട്ടികൾ`
                   : "കുട്ടികളില്ല (0)"}
@@ -311,7 +362,7 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
 
             <div className="flex items-center gap-2 pt-1 flex-wrap sm:flex-nowrap">
               {/* Stepper buttons */}
-              <div className="flex items-center border border-lavender-300 rounded-xl overflow-hidden bg-lavender-50/50">
+              <div className="flex items-center border border-lavender-300 rounded-xl overflow-hidden bg-lavender-50/50 shrink-0">
                 <button
                   type="button"
                   onClick={() => handleChange("childrenCount", Math.max(0, (parseInt(formData.childrenCount, 10) || 0) - 1))}
@@ -353,6 +404,141 @@ export const RegistrationForm = ({ onSuccess, onOpenDetails }) => {
                 })}
               </div>
             </div>
+          </div>
+
+          {/* 5. Teenspace (ടീൻസ്പേസ് - 10, +1, +2 Students) Option */}
+          <div className={`p-4 sm:p-4.5 rounded-2xl border transition-all duration-200 ${
+            hasTeenspace 
+              ? "bg-lavender-50/90 border-2 border-lavender-400 shadow-sm" 
+              : "bg-white border-lavender-200/90 hover:border-lavender-300 shadow-2xs"
+          }`}>
+            <label className="flex items-start gap-3 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={hasTeenspace}
+                onChange={handleToggleTeenspace}
+                className="w-5 h-5 mt-0.5 rounded-md text-lavender-600 focus:ring-lavender-500 border-lavender-300 cursor-pointer accent-lavender-600 shrink-0"
+              />
+              <div className="flex-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <div className="flex items-center gap-1.5">
+                    <GraduationCap className="w-4 h-4 text-lavender-700" />
+                    <span className="font-extrabold text-xs sm:text-sm text-slate-900">
+                      Teenspace (ടീൻസ്പേസ്)
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-lavender-200 text-lavender-900 border border-lavender-300/80">
+                    10, +1, +2
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-1 font-medium leading-relaxed">
+                  10, +1, +2 ക്ലാസുകളിലെ വിദ്യാർത്ഥികൾ പങ്കെടുക്കുന്നുണ്ടെങ്കിൽ ടിക്ക് ചെയ്യുക.
+                </p>
+              </div>
+            </label>
+
+            {/* If Teenspace is checked: Show student list & Add button */}
+            {hasTeenspace && (
+              <div className="mt-4 pt-4 border-t border-lavender-200/80 space-y-3 animate-fadeIn">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-lavender-950 flex items-center gap-1.5">
+                    <span>വിദ്യാർത്ഥികളുടെ വിവരങ്ങൾ</span>
+                    {teenspaceStudents.length > 0 && (
+                      <span className="text-[11px] font-semibold text-lavender-700 bg-lavender-100 px-2 py-0.5 rounded-full">
+                        {teenspaceStudents.length} പേർ
+                      </span>
+                    )}
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={handleAddStudent}
+                    className="py-1.5 px-3 rounded-xl bg-lavender-600 hover:bg-lavender-700 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>+ Add Student</span>
+                  </button>
+                </div>
+
+                {/* Students Cards List */}
+                <div className="space-y-2.5">
+                  {teenspaceStudents.map((student, idx) => (
+                    <div 
+                      key={student.id || idx}
+                      className="p-3 sm:p-3.5 rounded-xl bg-white border border-lavender-300 shadow-2xs space-y-2 relative"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[11px] font-extrabold text-lavender-800 bg-lavender-100 px-2 py-0.5 rounded-md">
+                          വിദ്യാർത്ഥി #{idx + 1}
+                        </span>
+
+                        {/* Remove / Close Button */}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveStudent(idx)}
+                          className="p-1 rounded-lg text-rose-500 hover:text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer border border-transparent hover:border-rose-200"
+                          title="വിദ്യാർത്ഥിയെ ഒഴിവാക്കുക"
+                          aria-label="Remove student"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
+                        {/* Student Name */}
+                        <div className="sm:col-span-7">
+                          <input
+                            type="text"
+                            value={student.name}
+                            onChange={(e) => handleUpdateStudent(idx, "name", e.target.value)}
+                            placeholder="വിദ്യാർത്ഥിയുടെ പേര്"
+                            className="w-full px-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-200 focus:border-lavender-600 focus:ring-2 focus:ring-lavender-500/15 outline-none font-medium bg-slate-50/50 hover:bg-white focus:bg-white"
+                          />
+                        </div>
+
+                        {/* Class Grade (10, +1, +2) */}
+                        <div className="sm:col-span-5 flex items-center gap-1">
+                          <span className="text-[11px] font-bold text-slate-500 mr-1 shrink-0">ക്ലാസ്സ്:</span>
+                          {["10", "+1", "+2"].map((cls) => {
+                            const isSelected = student.classGrade === cls;
+                            return (
+                              <button
+                                key={cls}
+                                type="button"
+                                onClick={() => handleUpdateStudent(idx, "classGrade", cls)}
+                                className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                                  isSelected
+                                    ? "bg-lavender-600 text-white shadow-xs"
+                                    : "bg-lavender-50 hover:bg-lavender-100 text-lavender-900 border border-lavender-200"
+                                }`}
+                              >
+                                {cls}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {teenspaceStudents.length === 0 && (
+                    <div className="text-center py-4 px-3 rounded-xl border border-dashed border-lavender-300 bg-lavender-50/50">
+                      <p className="text-xs text-lavender-800 font-medium mb-2">
+                        വിദ്യാർത്ഥികളെ ചേർക്കാൻ താഴെ ക്ലിക്ക് ചെയ്യുക
+                      </p>
+                      <button
+                        type="button"
+                        onClick={handleAddStudent}
+                        className="py-1.5 px-4 rounded-xl bg-lavender-600 text-white font-bold text-xs inline-flex items-center gap-1.5 cursor-pointer shadow-xs"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>+ Add Student</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Prominent Lavender Register Button */}
